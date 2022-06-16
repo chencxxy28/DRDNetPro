@@ -1,0 +1,305 @@
+---
+title: "Separate Timepoints"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = '/Users/chixiang.chen/Library/CloudStorage/OneDrive-UniversityofMarylandSchoolofMedicine/UMSOM_collaboration/Alexa/')
+
+```
+
+
+```{r cars,echo=FALSE,results = FALSE}
+library(multcomp)
+library(nlme)
+library(readxl)
+
+
+
+
+multiplesheets <- function(fname) {
+  
+  # getting info about all excel sheets
+  sheets <- readxl::excel_sheets(fname)
+  tibble <- lapply(sheets, function(x) readxl::read_excel(fname, sheet = x))
+  data_frame <- lapply(tibble, as.data.frame)
+  
+  # assigning names to data frames
+  names(data_frame) <- sheets
+  
+  # return data frame
+  data_frame
+}
+
+#data<-read.csv("66 1 organs total rad:mg tissue normalized 24 hr in vivo signal.csv")
+data<-read_excel("MRI Analysis Coded for Sam 06062022.xlsx",sheet="Separate Timepoints")
+colnames(data)[6]<-"Enhancement"
+data$Animal_ID<-data$Animal_ID+1
+data.used<-data[!(data$Treatment==2 | data$Slice_ID==4),]
+dim(data.used)
+(table(data.used$Animal_ID))
+data.used$Slice_ID_pseudo<-data.used$Slice_ID
+data.used$Slice_ID_pseudo[data.used$Slice_ID_pseudo==2]<-1
+```
+
+## For Table 1: different time points
+```{r diff time, echo=FALSE, results = FALSE,message=FALSE,warning=FALSE}
+
+# y1<-data.used$Enhancement[data.used$Treatment==1 &
+#                             data.used$Time==0 &
+#                             data.used$Slice_ID==3]
+# y2<-data.used$Enhancement[data.used$Treatment==0 &
+#                             data.used$Time==0 &
+#                             data.used$Slice_ID==3]
+# t.test(y1, y2, var.equal=F)
+
+vf.all.diff<-varIdent(form=~1|Slice_ID)
+vf.two.diff<-varIdent(form=~1|Slice_ID_pseudo)
+
+#corr=corCompSymm(form=~1|Animal_ID)
+corr=corSymm(form=~1|Animal_ID)
+model0 <- gls(Enhancement ~ factor(Time) +(Treatment) +factor(Slice_ID)+ (Treatment):factor(Slice_ID) +factor(Slice_ID):factor(Time)+(Treatment):factor(Time)
+              +(Treatment):factor(Slice_ID):factor(Time),
+              weights=vf.all.diff, 
+              corr=corr, 
+              data=data.used)
+summary(model0)
+#anova(model0)
+
+model1 <- gls(Enhancement ~ factor(Time) +(Treatment) +factor(Slice_ID)+ (Treatment):factor(Slice_ID) +factor(Slice_ID):factor(Time),
+              weights=vf.all.diff, 
+              corr=corr, 
+              data=data.used)
+summary(model1)
+
+model2 <- gls(Enhancement ~ factor(Time) +(Treatment) +factor(Slice_ID)+ (Treatment):factor(Slice_ID) +factor(Slice_ID):factor(Time)+(Treatment):factor(Time)
+              ,
+              weights=vf.all.diff, 
+              corr=corr, 
+              data=data.used)
+summary(model2)
+
+#model 0 is more preferred
+```
+
+
+```{r diff time model 0, echo=FALSE,message=FALSE,warning=FALSE}
+vf.all.diff<-varIdent(form=~1|Slice_ID)
+corr=corSymm(form=~1|Animal_ID)
+model0 <- gls(Enhancement ~ factor(Time) +(Treatment) +factor(Slice_ID)+ (Treatment):factor(Slice_ID) +factor(Slice_ID):factor(Time)+(Treatment):factor(Time)
+              +(Treatment):factor(Slice_ID):factor(Time)
+              ,
+              weights=vf.all.diff, 
+              corr=corr, 
+              data=data.used)
+summary(model0)
+```
+
+
+```{r diff time model 2 compare across slides}
+#run multiple tests
+K_trt_time0 <- rbind("Time0slice1trt vs Time0slice1control"=c(
+ 0,0,0,1,0,0,
+ 
+ 0,0,
+ 0,0,
+ 0,0,
+ 0,0,
+ 
+ 0,0,
+ 0,0
+),
+"Time0slide2trt vs Time0slide2control"=c(
+ 0,0,0,1,0,0,
+ 
+ 1,0,
+ 0,0,
+ 0,0,
+ 0,0,
+ 
+ 0,0,
+ 0,0
+),
+"Time0slide3trt vs Time0slide3control"=c(
+ 0,0,0,1,0,0,
+ 
+ 0,1,
+ 0,0,
+ 0,0,
+ 0,0,
+ 
+ 0,0,
+ 0,0
+)
+)
+
+K_trt_time1 <- rbind("Time1slice1trt vs Time1slice1control"=c(
+ 0,0,0,1,0,0,
+ 
+ 0,0,
+ 0,0,
+ 0,0,
+ 1,0,
+ 
+ 0,0,
+ 0,0
+),
+"Time1slide2trt vs Time1slide2control"=c(
+ 0,0,0,1,0,0,
+ 
+ 1,0,
+ 0,0,
+ 0,0,
+ 1,0,
+ 
+ 1,0,
+ 0,0
+),
+"Time1slide3trt vs Time1slide3control"=c(
+ 0,0,0,1,0,0,
+ 
+ 0,1,
+ 0,0,
+ 0,0,
+ 1,0,
+ 
+ 0,0,
+ 1,0
+)
+)
+
+K_trt_time2 <- rbind("Time2slice1trt vs Time2slice1control"=c(
+ 0,0,0,1,0,0,
+ 
+ 0,0,
+ 0,0,
+ 0,0,
+ 0,1,
+ 
+ 0,0,
+ 0,0
+),
+"Time2slide2trt vs Time2slide2control"=c(
+ 0,0,0,1,0,0,
+ 
+ 1,0,
+ 0,0,
+ 0,0,
+ 0,1,
+ 
+ 0,1,
+ 0,0
+),
+"Time2slide3trt vs Time2slide3control"=c(
+ 0,0,0,1,0,0,
+ 
+ 0,1,
+ 0,0,
+ 0,0,
+ 0,1,
+ 
+ 0,0,
+ 0,1
+)
+)
+
+
+time0 <- glht(model0, linfct = K_trt_time0)
+comparison.time0.output<-summary(time0,test = adjusted("holm"))
+comparison.time0.output
+
+time1 <- glht(model0, linfct = K_trt_time1)
+comparison.time1.output<-summary(time1,test = adjusted("holm"))
+comparison.time1.output
+
+time2 <- glht(model0, linfct = K_trt_time2)
+comparison.time2.output<-summary(time2,test = adjusted("holm"))
+comparison.time2.output
+```
+
+
+```{r diff time model 0 with reduced model, echo=FALSE,message=FALSE,warning=FALSE,eval=FALSE}
+vf.all.diff<-varIdent(form=~1|Slice_ID)
+corr=corSymm(form=~1|Animal_ID)
+model0 <- gls(Enhancement ~ factor(Time) +(Treatment) +factor(Slice_ID)+ (Treatment):factor(Slice_ID) +factor(Slice_ID):factor(Time) +(Treatment):factor(Time)
+              ,
+              weights=vf.all.diff, 
+              corr=corr, 
+              data=data.used)
+summary(model0)
+```
+
+
+
+```{r diff time model 0 compare across slices based on reduced model, eval=FALSE}
+#run multiple tests
+K_trt_time0<- rbind("time0slice1trt vs time0slice1control"=c(
+ 0,0,0,1,0,0,
+ 
+ 0,0,
+ 0,0,
+ 0,0,
+ 0,0
+),
+"time0slide2trt vs time0slide2control"=c(
+ 0,0,0,1,0,0,
+ 
+ 1,0,
+ 0,0,
+ 0,0,
+ 0,0
+),
+"time0slide3trt vs time0slide3control"=c(
+ 0,0,0,1,0,0,
+ 
+ 0,1,
+ 0,0,
+ 0,0,
+ 0,0
+)
+)
+
+K_trt_time1<- rbind("time1slice1trt vs time1slice1control"=c(
+ 0,0,0,1,0,0,
+ 
+ 0,0,
+ 0,0,
+ 0,0,
+ 1,0
+),
+"time1slide2trt vs time1slide2control"=c(
+ 0,0,0,1,0,0,
+ 
+ 1,0,
+ 0,0,
+ 0,0,
+ 1,0
+),
+"time1slide3trt vs time1slide3control"=c(
+ 0,0,0,1,0,0,
+ 
+ 0,1,
+ 0,0,
+ 0,0,
+ 1,0
+)
+)
+
+compare<- glht(model0, linfct = K_trt_time0)
+comparison.time0.output<-summary(compare,test = adjusted("holm"))
+comparison.time0.output
+```
+
+
+## Overall treatment effects across slices
+```{r diff time model 0 with merged slices, echo=FALSE,message=FALSE,warning=FALSE}
+vf.all.diff<-varIdent(form=~1|Slice_ID)
+corr=corSymm(form=~1|Animal_ID)
+model0 <- gls(Enhancement ~ factor(Time) +(Treatment) + +(Treatment):factor(Time)
+              ,
+              weights=vf.all.diff, 
+              corr=corr, 
+              data=data.used)
+summary(model0)
+```
