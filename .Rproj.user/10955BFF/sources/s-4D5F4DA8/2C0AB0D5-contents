@@ -12,11 +12,11 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-**DRDNetProf** is a statistical learning algorithm for recover disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the first step of implementing the DRDNet.  
+**DRDNetProf** is a statistical learning algorithm for recover disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the first step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533).  
 
 To begin with, we need to install the following packages in R
 
-## Installation
+# Installation
 ```{r, eval=FALSE}
 if (!require("devtools")) {
   install.packages("devtools")
@@ -25,7 +25,8 @@ devtools::install_github("chencxxy28/DRDNetProf")
 add more here??
 ```
 
-##Prepare the data for training the agent
+# Prepare the data for training the agent
+Before predicting the agent, the users need to prepare the data for training the model. The data is required to be a matrix, which includes the outcome in the first column and all potential predictors in the remaining columns. Do not include the intercept as one column. The outcome in this protocol is in the binary scale (e.g., 0=no disease and 1=disease), which in practice indicates the disease status. All values in the matrix should be numeric. The missing data is allowed in this training process, though it is always recommended to have a complete data as an input.
 
 
 
