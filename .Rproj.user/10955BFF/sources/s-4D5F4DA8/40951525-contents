@@ -115,8 +115,8 @@ qqnorm(y=row_mean)
 #read phenotype data
 phenotype<-read.csv("phenotype.csv")
 #phenotype[1:4,1:10]
-name_pheno<-c("SUBJID","AGE","HGHT","BMI","MHASTHMA","MHCOPD","MHHRTATT","MHHRTDIS",
-              "MHT1D","MHT2D","MHSMKSTS","MHDRNKSTS","SEX","MHHTN")
+name_pheno<-c("MHHTN","SUBJID","AGE","HGHT","BMI","MHASTHMA","MHCOPD","MHHRTATT","MHHRTDIS",
+              "MHT1D","MHT2D","MHSMKSTS","MHDRNKSTS","SEX")
 pheno_used<-phenotype[,colnames(phenotype) %in% name_pheno]
 pheno_used<-pheno_used[-which(pheno_used$SUBJID=="K-562"),]
 dim(pheno_used)
