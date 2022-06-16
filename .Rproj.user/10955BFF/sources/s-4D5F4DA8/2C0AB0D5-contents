@@ -1,0 +1,37 @@
+---
+title: "Tutorial 1: predict the agent "
+author: "Chixiang Chen"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{DRDNetProf}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**DRDNetProf** is a statistical learning algorithm for recover disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the first step of implementing the DRDNet.  
+
+To begin with, we need to install the following packages in R
+
+## Installation
+```{r, eval=FALSE}
+if (!require("devtools")) {
+  install.packages("devtools")
+}
+devtools::install_github("chencxxy28/DRDNetProf")
+add more here??
+```
+
+##Prepare the data for training the agent
+
+
+
+
+
+
+
+
+
