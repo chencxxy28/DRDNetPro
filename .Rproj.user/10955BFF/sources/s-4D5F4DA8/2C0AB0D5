@@ -3,24 +3,25 @@
     "path": "~/Library/CloudStorage/OneDrive-UniversityofMarylandSchoolofMedicine/packages/DRDNetProf/vignettes/NAME-OF-VIGNETTE.Rmd",
     "project_path": "vignettes/NAME-OF-VIGNETTE.Rmd",
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "334972812",
     "contents": "",
-    "dirty": true,
+    "dirty": false,
     "created": 1655387663229.0,
     "source_on_save": false,
     "relative_order": 2,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "34,0",
-        "scrollLine": "29"
+        "cursorPosition": "78,186",
+        "scrollLine": "73",
+        "last_setup_crc32": "4D5F4DA8721b9608"
     },
     "folds": "",
-    "lastKnownWriteTime": 1655387663,
+    "lastKnownWriteTime": 1655396809,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1655390046122,
+    "last_content_update": 1655396809467,
     "read_only": false,
     "read_only_alternatives": []
 }
