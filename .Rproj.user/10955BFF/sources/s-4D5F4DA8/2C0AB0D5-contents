@@ -26,7 +26,19 @@ add more here??
 ```
 
 # Prepare the data for training the agent
-Before predicting the agent, the users need to prepare the data for training the model. The data is required to be a matrix, which includes the outcome in the first column and all potential predictors in the remaining columns. Do not include the intercept as one column. The outcome in this protocol is in the binary scale (e.g., 0=no disease and 1=disease), which in practice indicates the disease status. All values in the matrix should be numeric. The missing data is allowed in this training process, though it is always recommended to have a complete data as an input.
+Before predicting the agent, the users need to prepare the data for training the model. The data is required to be a matrix, which includes the outcome in the first column and all potential predictors in the remaining columns. Do not include the intercept as one column. The outcome in this protocol is in the binary scale (e.g., 0=no disease and 1=disease), which in practice indicates the disease status. All values in the matrix should be numeric. The missing data is allowed in this training process, though it is always recommended to have a complete data as an input. The following working data is from one sample of data in GTEx project and deidentified. 
+
+add working data here
+
+# Prepare the data for training the agent
+## logistic regression
+
+## Random forest
+
+## XGBoost
+
+
+
 
 
 
