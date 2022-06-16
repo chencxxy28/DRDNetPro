@@ -10,6 +10,7 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = '/Users/chixiang.chen/OneDrive - University of Maryland School of Medicine/phd_in_psu/research/Prof._Wu/Network/tissue/blood_vessel/')
 ```
 
 **DRDNetProf** is a statistical learning algorithm for recover disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the first step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533).  
@@ -25,19 +26,57 @@ devtools::install_github("chencxxy28/DRDNetProf")
 add more here??
 ```
 
+
+```{r}
+library(pROC)
+```
+
 # Prepare the data for training the agent
 Before predicting the agent, the users need to prepare the data for training the model. The data is required to be a matrix, which includes the outcome in the first column and all potential predictors in the remaining columns. Do not include the intercept as one column. The outcome in this protocol is in the binary scale (e.g., 0=no disease and 1=disease), which in practice indicates the disease status. All values in the matrix should be numeric. The missing data is allowed in this training process, though it is always recommended to have a complete data as an input. The following working data is from one sample of data in GTEx project and deidentified. 
 
-add working data here
+```{r,message=FALSE}
+#read the data
+pheno_raw<-read.csv("pheno_used.csv")
+SUBJID<-pheno_raw$SUBJID
+#rearrange the data
+pheno_used<-data.frame(MHHTN=pheno_raw$MHHTN,pheno_raw[,!(colnames(pheno_raw) %in% c("MHHTN","SUBJID"))])
+head(pheno_used)
+```
 
-# Prepare the data for training the agent
+# Build up the training model
+There is no unique way to predict the agent. Statistical regression models or machine learning algorithms can be applied. In our program, we allow the users to specify their own method, which includes conventional logistic regression, random forest, and XGBoost.
+
 ## logistic regression
+```{r,message=FALSE}
+fit<-glm(MHHTN~AGE+HGHT+BMI+MHASTHMA+MHCOPD+MHHRTATT+MHHRTDIS+MHT1D+MHT2D+MHDRNKSTS+SEX,data=pheno_used,family = binomial(link = "logit"))
+summary(fitted(fit))
+```
 
 ## Random forest
+add later??
 
 ## XGBoost
+add later??
 
+# Predict and evaluate the agent
+When the agent and trained, it is better to check its prediction performance. Note that the pseudo-dynamic network is sensitive to the values of agent, and the agent with good prediction to the disease risk is more preferred. To check its performance, we can use ROC and AUC value. For evaluation purpose, we need to create a training data and testing data. The training data is used for data fitting, whereas the testing data is used for prediction evaluation. Below, we consider 90% of data for training and 10% of data for testing.
+```{r,message=FALSE}
+set.seed(12345)
+sample.ind<-sample(1:nrow(pheno_used),round(0.9*nrow(pheno_used))) #id used for training
+pheno_used_training<-pheno_used[sample.ind,]
+pheno_used_testing<-pheno_used[!(1:nrow(pheno_used) %in% sample.ind),]
 
+fit_train<-glm(MHHTN~AGE+HGHT+BMI+MHASTHMA+MHCOPD+MHHRTATT+MHHRTDIS+MHT1D+MHT2D+MHDRNKSTS+SEX,data=pheno_used_training,family = binomial(link = "logit"))
+
+test_prob = predict(fit_train, newdata = pheno_used_testing, type = "response")
+test_roc_specific =roc(pheno_used_testing$MHHTN ~ test_prob, plot = TRUE, print.auc = TRUE)
+```
+
+The AUC value is around 0.85, which is desired. Then we calculate the imputed agent 
+```{r,message=FALSE}
+rate<-fitted(fit)
+```
+Similar procedure could be applied to the case with random forest or XGBoost. After the agent imputation, we can move forward to the stage of network learning, which is illustrated in ??
 
 
 
