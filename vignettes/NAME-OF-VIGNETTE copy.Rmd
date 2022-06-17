@@ -1,0 +1,109 @@
+---
+title: "Tutorial 2: Train the network model  "
+author: "Chixiang Chen"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{DRDNetProf}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = '/Users/chixiang.chen/OneDrive - University of Maryland School of Medicine/phd_in_psu/research/Prof._Wu/Network/tissue/blood_vessel/')
+```
+
+**DRDNetProf** is a statistical learning algorithm for recover disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the second step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). If the first step has not been done yet, please visit ?? 
+
+```{r}
+library(pROC)
+```
+
+# Prepare the data for training the network
+Before recovering the network, the users need to preprocess the gene expression data. This procedure will involve following two steps: gene expression preprocess and gene selection
+## Filtering and transformation
+This step involves deleting gene with all zeros, log transformation, and choose genes without zero values. The last filtering step is to stabilize the algorithm, which is not required in general.
+```{r,message=FALSE}
+#read the data
+pheno_together<-read.csv("pheno_together.csv") # phenotype data
+data_vessel<-read.csv("data_vessel.csv") # gene expression data
+
+rownames(data_vessel)<-data_vessel[,1]
+data_vessel<-data_vessel[,-1]
+dim(data_vessel)
+
+#delete gene with all zeros
+row_mean<-apply(data_vessel,1, mean)
+data_vessel<-data_vessel[row_mean>0,]
+dim(data_vessel)
+
+#let the gene expression equal to zero if it's less than 1 level:
+data_vessel[data_vessel<=1]<-0
+dim(data_vessel)
+which(data_vessel<=1 & data_vessel>0)
+
+#count zeros in each row:
+zero_row<-apply(data_vessel,1,function (x) length(which(x==0)))
+summary(zero_row)
+
+#do log transformation
+data_vessel[data_vessel!=0]<-log(data_vessel[data_vessel!=0])
+dim(data_vessel)
+
+#set threshold about zeros:
+data_vessel<-data_vessel[zero_row<=0,]
+dim(data_vessel)
+
+write.csv(data_vessel,"data_vessel_processed.csv",row.names =F)
+```
+
+The reprocessed data can be directly loaded by
+```{r,message=FALSE}
+data_vessel<-read.csv("data_vessel_processed.csv") # read preprocessed gene expression data
+```
+
+## Gene selection (screening)
+first create the data for screening
+```{r,message=FALSE}
+vessel_subject_id<-substring(colnames(data_vessel),6,10)
+vessel_subject_id<-ifelse(substring(vessel_subject_id,5,5)==".",substring(vessel_subject_id,1,4),substring(vessel_subject_id,1,5))
+
+vessel_together<-data.frame(cbind(vessel_subject_id,1))
+colnames(vessel_together)<-c("id","haha")
+index_data<-merge(x=vessel_together,y=pheno_together,by.x="id",all.x=T,sort=F)
+dim(index_data)
+```
+
+Run the following code to selectgenes
+```{r,message=FALSE}
+#screening for smoking group
+data_vessel_smoker<-data_vessel[,index_data$smoke==1]
+index_data_smoker<-index_data[index_data$smoke==1,]
+
+screening_index_smoking<-spearman_screen(index_data=index_data_smoker,data_vessel=data_vessel_smoker,size=40)
+screening_index_smoking
+
+#screening for non-smoking group
+data_vessel_nsmoker<-data_vessel[,index_data$smoke==0]
+index_data_nsmoker<-index_data[index_data$smoke==0,]
+
+screening_index_nsmoking<-spearman_screen(index_data=index_data_nsmoker,data_vessel=data_vessel_nsmoker,size=40)
+screening_index_nsmoking
+
+
+sig_all_index<-test_screen(data_vessel,group=index_data$hyper,covariate=index_data$smoke)
+
+length(sig_all_index)
+```
+
+We select 85 genes. Finally, let's construct the data for the following network learning
+```{r,message=FALSE}
+index_utilized<-unique(c(screening_index_smoking,screening_index_nsmoking,sig_all_index))
+
+index<-as.numeric(as.matrix(index_data$rate,ncol=1))
+data_vessel_order<-data_vessel[,order(index)] #order the gene matrix based on the order of the agent
+x_original<-t(data_vessel_order)
+xsis<-x_original[,index_utilized] #focus on the selected 85 genes
+exp_index<-index[order(index)] #order the agent
+dim(xsis)
+```
