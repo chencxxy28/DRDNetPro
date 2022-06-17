@@ -1,6 +1,0 @@
-"0","test_roc_specific =roc(pheno_used_testing$MHHTN ~ test_prob, plot = TRUE, print.auc = TRUE)
-"
-"2","Setting levels: control = 0, case = 1
-"
-"2","Setting direction: controls < cases
-"
