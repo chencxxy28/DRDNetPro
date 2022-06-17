@@ -37,7 +37,6 @@ Before predicting the agent, the users need to prepare the data for training the
 ```{r,message=FALSE}
 #read the data
 pheno_raw<-read.csv("pheno_used.csv")
-SUBJID<-pheno_raw$SUBJID
 #rearrange the data
 pheno_used<-data.frame(MHHTN=pheno_raw$MHHTN,pheno_raw[,!(colnames(pheno_raw) %in% c("MHHTN","SUBJID"))])
 head(pheno_used)
@@ -49,7 +48,8 @@ There is no unique way to predict the agent. Statistical regression models or ma
 ## logistic regression
 ```{r,message=FALSE}
 fit<-glm(MHHTN~AGE+HGHT+BMI+MHASTHMA+MHCOPD+MHHRTATT+MHHRTDIS+MHT1D+MHT2D+MHDRNKSTS+SEX,data=pheno_used,family = binomial(link = "logit"))
-summary(fitted(fit))
+rate<-fitted(fit)
+summary(rate)
 ```
 
 ## Random forest
@@ -72,11 +72,15 @@ test_prob = predict(fit_train, newdata = pheno_used_testing, type = "response")
 test_roc_specific =roc(pheno_used_testing$MHHTN ~ test_prob, plot = TRUE, print.auc = TRUE)
 ```
 
-The AUC value is around 0.85, which is desired. Then we calculate the imputed agent 
+The AUC value is around 0.83, which is desired. Similar procedure could be applied to the case with random forest or XGBoost. After the agent imputation, we can move forward to the stage of network learning, which is illustrated in ?? Before the end of this tutorial, let us create the data used for the next tutorial
+
 ```{r,message=FALSE}
-rate<-fitted(fit)
+pheno_subject_id<-substring(pheno_raw$SUBJID,6,10)
+pheno_together<-data.frame(cbind(pheno_subject_id,rate,pheno_used$MHSMKSTS,pheno_used$SEX,pheno_used$HGHT,pheno_used$BMI,pheno_used$MHHTN))
+colnames(pheno_together)<-c("id","rate","smoke","sex","height","bmi","hyper")
+head(pheno_together)
+write.csv(pheno_together,"pheno_together.csv",row.names =F)
 ```
-Similar procedure could be applied to the case with random forest or XGBoost. After the agent imputation, we can move forward to the stage of network learning, which is illustrated in ??
 
 
 
