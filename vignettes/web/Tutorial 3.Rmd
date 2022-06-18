@@ -13,7 +13,9 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = '/Users/chixiang.chen/OneDrive - University of Maryland School of Medicine/phd_in_psu/research/Prof._Wu/Network/tissue/blood_vessel/')
 ```
 
-**DRDNetPro** is a statistical learning algorithm for recover disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the second step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). If the first step has not been done yet, please visit ?? 
+**DRDNetPro** is a statistical learning algorithm for recover disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the second step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). 
+
+If the user hasn't gone through the Tutorial 1, please visit [Tutorial 2](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial%202.html) for the next step of visualizing the results. 
 
 ```{r}
 library(np)
