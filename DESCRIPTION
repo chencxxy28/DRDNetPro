@@ -1,4 +1,4 @@
-Package: DRDNetProf
+Package: DRDNetPro
 Type: Package
 Title: The bioprotocal for recovering pseudo-dynamic networks from static data
 Version: 0.1.0
@@ -9,8 +9,8 @@ License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
-URL: https://github.com/chencxxy28/DRDNetProf
-BugReports: https://github.com/chencxxy28/DRDNetProf/issues
+URL: https://github.com/chencxxy28/DRDNetPro
+BugReports: https://github.com/chencxxy28/DRDNetPro/issues
 Suggests: 
     knitr,
     rmarkdown
