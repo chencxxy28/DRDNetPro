@@ -3,7 +3,7 @@ title: "Tutorial 2: Train the network model  "
 author: "Chixiang Chen"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{DRDNetProf}
+  %\VignetteIndexEntry{DRDNetPro}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = '/Users/chixiang.chen/OneDrive - University of Maryland School of Medicine/phd_in_psu/research/Prof._Wu/Network/tissue/blood_vessel/')
 ```
 
-**DRDNetProf** is a statistical learning algorithm for recover disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the second step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). If the first step has not been done yet, please visit ?? 
+**DRDNetPro** is a statistical learning algorithm for recover disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the second step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). If the first step has not been done yet, please visit ?? 
 
 ```{r}
 library(np)
