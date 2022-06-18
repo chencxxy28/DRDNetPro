@@ -4,7 +4,8 @@
 \alias{network.learn}
 \title{Estimating equation for ELCIC under GLM}
 \usage{
-network.learn(data_observe,x_cov,X_big_int,X_big_int_cov,agent,degree=3,len.knots=3,cv=TRUE,nfolds=20,alpha=1)
+network.learn(data_observe,x_cov,X_big_int,X_big_int_cov,
+agent,degree=3,len.knots=3,cv=TRUE,nfolds=20,alpha=1)
 }
 \arguments{
 \item{data_observe}{A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in}
