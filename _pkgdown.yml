@@ -11,11 +11,13 @@ navbar:
   left:
     - icon: fa-home
       href: index.html
-    - text: "Tutorial summary"
-      href: articles/NAME-OF-VIGNETTE.html
-    - text: "Tutorial 1"
-      href: articles/web/Tutorial 1.html
-    - text: "Tutorial 2"
-      href: articles/web/Tutorial 2.html
+    - text: "Outline"
+      manu:
+      - text: "Tutorial summary"
+        href: articles/NAME-OF-VIGNETTE.html
+      - text: "Tutorial 1"
+        href: articles/web/Tutorial 1.html
+      - text: "Tutorial 2"
+        href: articles/web/Tutorial 2.html
     - text: "Functions"
       href: reference/index.html
