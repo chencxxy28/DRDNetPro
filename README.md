@@ -13,4 +13,4 @@ devtools::install_github("chencxxy28/DRDNetProf")
 
 # Vignettes
 
-Please visit [Tutorial]
+Please visit [Tutorial](https://chencxxy28.github.io/DRDNetProf/articles/NAME-OF-VIGNETTE.html)
