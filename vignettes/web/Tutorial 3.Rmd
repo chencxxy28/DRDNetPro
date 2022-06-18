@@ -1,5 +1,5 @@
 ---
-title: "Tutorial 2: Train the network model  "
+title: "Tutorial 3: Visualize the results  "
 author: "Chixiang Chen"
 output: rmarkdown::html_vignette
 vignette: >
