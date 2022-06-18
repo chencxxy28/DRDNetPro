@@ -5,5 +5,8 @@ articles:
   NAME-OF-VIGNETTE: NAME-OF-VIGNETTE.html
   Tutorial 1: web/Tutorial 1.html
   Tutorial 2: web/Tutorial 2.html
-last_built: 2022-06-18T04:16Z
+last_built: 2022-06-18T04:22Z
+urls:
+  reference: https://chencxxy28.github.io/DRDNetProf/reference
+  article: https://chencxxy28.github.io/DRDNetProf/articles
 
