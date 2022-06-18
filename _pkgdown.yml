@@ -21,6 +21,9 @@ navbar:
           - text: -------
           - text: Tutorial 2
             href: articles/web/Tutorial 2.html
+          - text: -------
+          - text: Tutorial 3
+            href: articles/web/Tutorial 3.html
     Function:
         text: "Functions"
         href: reference/index.html
