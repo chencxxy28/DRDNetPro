@@ -4,7 +4,8 @@
 \alias{base.construct}
 \title{Estimating equation for ELCIC under GLM}
 \usage{
-base.construct(data_observe,data_fitted, degree=3,len.knots=3,data_fitted_cov,agent,x_cov)
+base.construct(data_observe,data_fitted, degree=3,
+len.knots=3,data_fitted_cov,agent,x_cov)
 }
 \arguments{
 \item{data_observe}{A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in}
