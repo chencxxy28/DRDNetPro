@@ -8,7 +8,7 @@ Understanding how genes are differentially expressed across tissues is the key t
 if (!require("devtools")) {
   install.packages("devtools")
 }
-devtools::install_github("chencxxy28/ELCIC")
+devtools::install_github("chencxxy28/DRDNetProf")
 ```
 
 # Vignettes
