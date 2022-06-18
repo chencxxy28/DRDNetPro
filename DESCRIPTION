@@ -4,7 +4,7 @@ Title: The bioprotocal for recovering pseudo-dynamic networks from static data
 Version: 0.1.0
 Author: Chixiang Chen
 Maintainer: Chixiang Chen <chencxxy@hotmail.com>
-Description: A detailed procedure to implement DRDNet
+Description: We developed a statistical pipeline called DRDNet to visualize and trace how genes dynamically interact with each other across diverse tissues to shape health risk from static expression data. DRDNet coding all genes into bidirectional, signed, weighted, and feedback looped networks will provide profound genomic information for medical doctors to design precise medicine. 
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -13,3 +13,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+Imports: Matrix, grpreg, np, pROC, splines2
