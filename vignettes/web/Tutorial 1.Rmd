@@ -3,7 +3,7 @@ title: "Tutorial 1: predict the agent "
 author: "Chixiang Chen"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{DRDNetProf}
+  %\VignetteIndexEntry{DRDNetPro}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = '/Users/chixiang.chen/OneDrive - University of Maryland School of Medicine/phd_in_psu/research/Prof._Wu/Network/tissue/blood_vessel/')
 ```
 
-**DRDNetProf** is a statistical learning algorithm for recover disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the first step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533).  
+**DRDNetPro** is a statistical learning algorithm for recover disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the first step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533).  
 
 To begin with, we need to install the following packages in R
 
@@ -22,7 +22,7 @@ To begin with, we need to install the following packages in R
 if (!require("devtools")) {
   install.packages("devtools")
 }
-devtools::install_github("chencxxy28/DRDNetProf")
+devtools::install_github("chencxxy28/DRDNetPro")
 add more here??
 ```
 
