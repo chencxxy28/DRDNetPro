@@ -1,0 +1,21 @@
+
+
+title: DRDNetProf
+url: https://chencxxy28.github.io/DRDNetProf/
+template:
+  params:
+    bootswatch: cosmo
+
+navbar:
+  type: inverse
+  left:
+    - icon: fa-home
+      href: index.html
+    - text: "Tutorial summary"
+      href: articles/NAME-OF-VIGNETTE.html
+    - text: "Tutorial 1"
+      href: articles/web/Tutorial 1.html
+    - text: "Tutorial 2"
+      href: articles/web/Tutorial 2.html
+    - text: "Functions"
+      href: reference/index.html
