@@ -1,0 +1,42 @@
+---
+title: "DRDNetProf"
+author: "Chixiang Chen"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{DRDNetProf}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**DRDNetProf** is a statistical learning algorithm for recover disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the first step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533).  
+
+# Installation and other packaages
+To begin with, the user need to install our packages
+```{r, eval=FALSE}
+if (!require("devtools")) {
+  install.packages("devtools")
+}
+devtools::install_github("chencxxy28/DRDNetProf")
+```
+
+To run the following tutorial, the user need to install other packages listed below
+```{r}
+library(pROC)
+library(igraph)
+```
+
+The tutorial is organized in three sections. The user is recommended to sequentially go through these sections
+
+# Predict the agent
+This section includes the content of preparing data, building the prediction model for the agent, and evaluating the model of predicted agent. Please find the details in [tutorial 1]
+
+# Train the network model  
+This section is the main section in DRDNetProf, which includes the content of preparing data, training varying coefficient model for gene expressions, generating the base matrices for network learning, and training the network model. Please find the details in [tutorial 2]
+
+# Visualize the results 
+This section includes the content of extracting the results from the trained network model, visualizing the fitted genes by the varying coefficient model, and visualizing the pseudo-dynamic network for a given agent value. Please find the details in [tutorial 3]
+
