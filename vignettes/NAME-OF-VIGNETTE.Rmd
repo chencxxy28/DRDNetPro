@@ -32,11 +32,11 @@ library(igraph)
 The tutorial is organized in three sections. The user is recommended to sequentially go through these sections
 
 # Predict the agent
-This section includes the content of preparing data, building the prediction model for the agent, and evaluating the model of predicted agent. Please find the details in [tutorial 1](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial%201.html)
+This section includes the content of preparing data, building the prediction model for the agent, and evaluating the model of predicted agent. Please find the details in [Tutorial 1](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial%201.html)
 
 # Train the network model  
-This section is the main section in DRDNetPro, which includes the content of preparing data, training varying coefficient model for gene expressions, generating the base matrices for network learning, and training the network model. Please find the details in [tutorial 2](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial%202.html)
+This section is the main section in DRDNetPro, which includes the content of preparing data, training varying coefficient model for gene expressions, generating the base matrices for network learning, and training the network model. Please find the details in [Tutorial 2](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial%202.html)
 
 # Visualize the results 
-This section includes the content of extracting the results from the trained network model, visualizing the fitted genes by the varying coefficient model, and visualizing the pseudo-dynamic network for a given agent value. Please find the details in [tutorial 3](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial%203.html)
+This section includes the content of extracting the results from the trained network model, visualizing the fitted genes by the varying coefficient model, and visualizing the pseudo-dynamic network for a given agent value. Please find the details in [Tutorial 3](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial%203.html)
 
