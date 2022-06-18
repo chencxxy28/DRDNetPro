@@ -1,6 +1,7 @@
 #'@title Estimating equation for ELCIC under GLM
 #'@description A specified estimating equation for ELCIC under GLM. This estimating equation is used for marginal mean selection.
-#'@usage base.construct(data_observe,data_fitted, degree=3,len.knots=3,data_fitted_cov,agent,x_cov)
+#'@usage base.construct(data_observe,data_fitted, degree=3,
+#'len.knots=3,data_fitted_cov,agent,x_cov)
 #'@param data_observe A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in
 #'@param data_fitted A vector containing outcomes.
 #'@param degree A plug-in estimator solved by an external estimating procedure.
@@ -10,6 +11,10 @@
 #'@param x_cov A plug-in estimator solved by an external estimating procedure.
 #'@return A matrix containing values of calculated estimating equations.
 #'@export
+#'@import np splines2 grpreg Matrix pROC
+#'@importFrom graphics lines par
+#'@importFrom stats coef cor glm p.adjust
+
 
 base.construct<-function(data_observe=data_observe,
                          data_fitted=data_fitted, degree=3,len.knots=3,
@@ -100,7 +105,8 @@ base.construct<-function(data_observe=data_observe,
 
 #'@title Estimating equation for ELCIC under GLM
 #'@description A specified estimating equation for ELCIC under GLM. This estimating equation is used for marginal mean selection.
-#'@usage network.learn(data_observe,x_cov,X_big_int,X_big_int_cov,agent,degree=3,len.knots=3,cv=TRUE,nfolds=20,alpha=1)
+#'@usage network.learn(data_observe,x_cov,X_big_int,X_big_int_cov,
+#'agent,degree=3,len.knots=3,cv=TRUE,nfolds=20,alpha=1)
 #'@param data_observe A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in
 #'@param x_cov A plug-in estimator solved by an external estimating procedure.
 #'@param X_big_int A vector containing outcomes.
