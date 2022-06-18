@@ -11,7 +11,7 @@
 spearman_screen<-function(index_data,data_vessel,size)
 {
   index<-as.numeric(as.matrix(index_data$rate,ncol=1))
-  
+
   #order the data by the index:
   exp_index<-index[order(index)]
   X<-log(exp_index)
@@ -19,9 +19,9 @@ spearman_screen<-function(index_data,data_vessel,size)
   index_data<-index_data[order(index),]
   dim(data_vessel_order)
   Y<-data_vessel_order
-  
+
   ##screening by spearman correlation (seperate screening based on smoking groups)
-  #do smoking group 
+  #do smoking group
   x_original<-t(Y)
   data_vessel_order_smoking<-data_vessel_order
   exp_index_smoking<-exp_index
