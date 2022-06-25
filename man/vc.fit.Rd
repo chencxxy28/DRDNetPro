@@ -2,20 +2,20 @@
 % Please edit documentation in R/network_learning.R
 \name{vc.fit}
 \alias{vc.fit}
-\title{Estimating equation for ELCIC under GLM}
+\title{Fit a varying coefficient model}
 \usage{
 vc.fit(agent,data_observe,x_cov)
 }
 \arguments{
-\item{agent}{A plug-in estimator solved by an external estimating procedure.}
+\item{agent}{The imputed disease risk.}
 
-\item{data_observe}{A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in}
+\item{data_observe}{The gene expression matrix.}
 
-\item{x_cov}{A plug-in estimator solved by an external estimating procedure.}
+\item{x_cov}{The vector including covariate values (eg., smoking: 0 and 1).}
 }
 \value{
-A matrix containing values of calculated estimating equations.
+A list of two matrices including varying intercept and varying covariate effect, respective.
 }
 \description{
-A specified estimating equation for ELCIC under GLM. This estimating equation is used for marginal mean selection.
+This function fit the gene expression data into a varying coefficient model.
 }
