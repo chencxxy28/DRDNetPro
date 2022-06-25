@@ -4,7 +4,7 @@
 \alias{vc.fit}
 \title{Estimating equation for ELCIC under GLM}
 \usage{
-vc.fit<-function(agent,data_observe,x_cov)
+vc.fit(agent,data_observe,x_cov)
 }
 \arguments{
 \item{agent}{A plug-in estimator solved by an external estimating procedure.}
