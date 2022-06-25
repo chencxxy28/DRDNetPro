@@ -2,20 +2,20 @@
 % Please edit documentation in R/gene_screening.R
 \name{spearman_screen}
 \alias{spearman_screen}
-\title{Estimating equation for ELCIC under GLM}
+\title{Gene screening based on the Spearman correlation.}
 \usage{
 spearman_screen(index_data,data_vessel,size)
 }
 \arguments{
-\item{index_data}{A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in}
+\item{index_data}{The data including imputed agent.}
 
-\item{data_vessel}{A vector containing outcomes.}
+\item{data_vessel}{The gene expression matrix.}
 
-\item{size}{A plug-in estimator solved by an external estimating procedure.}
+\item{size}{The number of selected genes.}
 }
 \value{
-A matrix containing values of calculated estimating equations.
+The vector containing the index for the selected genes.
 }
 \description{
-A specified estimating equation for ELCIC under GLM. This estimating equation is used for marginal mean selection.
+This function can be used to screen the genes based on Spearman correlation coefficient.
 }
