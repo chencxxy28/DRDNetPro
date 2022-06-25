@@ -14,6 +14,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **DRDNetPro** is a statistical learning algorithm for recover disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the first step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533).  
 
+![](man/figures/Bio-protocal_paper 06252022.png)
+
+
 # Installation and other packages
 To begin with, the user need to install our packages
 ```{r, eval=FALSE}
