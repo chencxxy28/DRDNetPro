@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = '/Users/chixiang.chen/OneDrive - University of Maryland School of Medicine/phd_in_psu/research/Prof._Wu/Network/tissue/blood_vessel/')
 ```
 
-**DRDNetPro** is a statistical learning algorithm for recover disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the first step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533).  
+**DRDNetPro** is a statistical learning algorithm for recovering disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the first step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). The data we will use in this tutorial is named [pheno_used].
 
 To begin with, we need to install the following packages in R
 
@@ -23,7 +23,6 @@ if (!require("devtools")) {
   install.packages("devtools")
 }
 devtools::install_github("chencxxy28/DRDNetPro")
-add more here??
 ```
 
 
@@ -72,7 +71,7 @@ test_prob = predict(fit_train, newdata = pheno_used_testing, type = "response")
 test_roc_specific =roc(pheno_used_testing$MHHTN ~ test_prob, plot = TRUE, print.auc = TRUE)
 ```
 
-The AUC value is around 0.83, which is desired. Similar procedure could be applied to the case with random forest or XGBoost. After the agent imputation, we can move forward to the stage of network learning, which is illustrated in ?? Before the end of this tutorial, let us create the data used for the next tutorial
+The AUC value is around 0.83, which is desired. Similar procedure could be applied to the case with random forest or XGBoost. After the agent imputation, we can move forward to the stage of network learning, which is illustrated in [Tutorial 2](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial%202.html). Before the end of this tutorial, let us create a phenotypical data consisting of the imputed agent for the use in next tutorial.
 
 ```{r,message=FALSE}
 pheno_subject_id<-substring(pheno_raw$SUBJID,6,10)
