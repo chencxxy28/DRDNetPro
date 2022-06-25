@@ -1,4 +1,7 @@
 # DRDNetPro: A cartographic tool to infer disease risk from tissue-specific gene expression
+<!-- badges: start -->
+  [![R-CMD-check](https://github.com/chencxxy28/DRDNetPro/workflows/R-CMD-check/badge.svg)](https://github.com/chencxxy28/DRDNetPro/actions)
+<!-- badges: end -->
 
 
 ![](man/figures/workflow.png)
