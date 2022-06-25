@@ -2,11 +2,15 @@
 
 title: DRDNetPro
 url: https://chencxxy28.github.io/DRDNetPro/
-  # template:
-  #   params:
-  #     bootswatch: cosmo
+template:
+  params:
+    #bootstrap: 5
+    bootswatch: cosmo
+    #theme: breeze-light
 
 navbar:
+  bg: dark
+  type: inverse
   structure:
     left: [Tutorial, Function]
   components:
