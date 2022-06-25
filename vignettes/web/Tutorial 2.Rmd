@@ -13,12 +13,13 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = '/Users/chixiang.chen/OneDrive - University of Maryland School of Medicine/phd_in_psu/research/Prof._Wu/Network/tissue/blood_vessel/')
 ```
 
-**DRDNetPro** is a statistical learning algorithm for recover disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the second step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). 
+**DRDNetPro** is a statistical learning algorithm for recovering disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the second step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). The data that are involved in this tutorial are [pheno_together], [data_vessel], [data_vessel_processed], [index_utilized], [data.vcfit], [base.output], [network.output]. 
 
 If the user hasn't gone through the Tutorial 1, please visit [Tutorial 1](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial%201.html) for the first step of predicting the agent. 
 
-
+The followings are necessary packages we need to train the network.
 ```{r}
+library(DRDNetPro)
 library(np)
 library(splines2)
 library(grpreg)
@@ -26,14 +27,18 @@ library(Matrix)
 ```
 
 # Prepare the data for training the network
-Before recovering the network, the users need to preprocess the gene expression data. This procedure will involve following two steps: gene expression preprocess and gene selection
+Before recovering the network, the users need to preprocess the gene expression data. This procedure will involve THE following two steps: gene expression preprocess and gene selection.
+
 ## Filtering and transformation
-This step involves deleting gene with all zeros, log transformation, and choose genes without zero values. The last filtering step is to stabilize the algorithm, which is not required in general.
+First, read the data [pheno_together] and [data_vessel]
 ```{r,message=FALSE}
 #read the data
 pheno_together<-read.csv("pheno_together.csv") # phenotype data
 data_vessel<-read.csv("data_vessel.csv") # gene expression data
+```
 
+Select genes with positive expressions and do log transformation. 
+```{r,message=FALSE}
 rownames(data_vessel)<-data_vessel[,1]
 data_vessel<-data_vessel[,-1]
 dim(data_vessel)
@@ -69,7 +74,7 @@ data_vessel<-read.csv("data_vessel_processed.csv") # read preprocessed gene expr
 ```
 
 ## Gene selection (screening)
-first create the data for screening
+After gene expression preprocessing, the user should conduct gene selection. First, create the data for screening
 ```{r,message=FALSE}
 vessel_subject_id<-substring(colnames(data_vessel),6,10)
 vessel_subject_id<-ifelse(substring(vessel_subject_id,5,5)==".",substring(vessel_subject_id,1,4),substring(vessel_subject_id,1,5))
@@ -80,7 +85,7 @@ index_data<-merge(x=vessel_together,y=pheno_together,by.x="id",all.x=T,sort=F)
 dim(index_data)
 ```
 
-Run the following code to selectgenes
+Run the function `spearman_screen` to screen the genes by Spearson correlation. The screening process should be done separately in group. Run the function `test_screen` to conduct the hypothesis testing. Then combine the genes selected by both screening and testing.
 ```{r,message=FALSE,eval=FALSE}
 #screening for smoking group
 data_vessel_smoker<-data_vessel[,index_data$smoke==1]
@@ -104,25 +109,25 @@ index_utilized<-unique(c(screening_index_smoking,screening_index_nsmoking,sig_al
 saveRDS(index_utilized, file = "index_utilized.rds")
 
 length(sig_all_index)
-
 ```
 
+The selected genes can be also directly accessed by running the code
 ```{r,message=FALSE}
 index_utilized<-readRDS(file = "index_utilized.rds")
 ```
 
-We select 85 genes. Finally, let's construct the data for the following network learning
+There are 85 genes selected. Finally, construct the data for the following network learning. These data are ordered in terms of imputed agent
 ```{r,message=FALSE}
 index<-as.numeric(as.matrix(index_data$rate,ncol=1))
 data_vessel_order<-data_vessel[,order(index)] #order the gene matrix based on the order of the agent
 x_original<-t(data_vessel_order)
-data_observe<-x_original[,index_utilized] #focus on the selected 85 genes
+data_observe<-x_original[,index_utilized] #focus on the selected 85 gene expressions
 agent<-index[order(index)] #order the agent
 smk_cov<-index_data$smoke[order(index)]
 ```
 
 # Train the varying coefficient model
-Before constructing the network, each selected gene should be fitted by varying coefficient model. 
+Before constructing the network, each selected gene should be fitted by varying coefficient model. Run the following code to delete samples that are too close to each other in terms of agent values.
 ```{r,message=FALSE}
 #further refine the data by deleting the data with agent too close to each other, this step is highly recommended in practice. Here we set the threshod=0.0001
 data_observe<-data_observe[c(1,diff(agent,lag=1))>=0.0001,]
@@ -130,55 +135,35 @@ x_cov<-smk_cov[c(1,diff(agent,lag=1))>=0.0001]
 agent<-agent[c(1,diff(agent,lag=1))>=0.0001]
 ```
 
-Run the function “??” 
+Run the function `vc.fit` to fit the varying coefficient model with smoking as the covariate.
 
 ```{r,message=FALSE,eval=FALSE}
-vc.fit<-function(agent=agent,data_observe=data_observe,x_cov=x_cov)
-{
-  t<-agent
-#get fitted values of observations using varying coefficient kernel regression
-data_fitted<-rep()
-data_fitted_cov<-rep()
-#bws<-0.01
-for(i in 1:ncol(data_observe))
-{
-    bw <- npscoefbw(formula=data_observe[,i]~x_cov|t,betas=T,regtype="ll")
-    bw <- npscoef(bw,betas=T,exdat=data.frame(x_cov=x_cov),ezdat=data.frame(t=t),regtype="ll")
-    fitted<-coef(bw)[,1]
-    data_fitted<-cbind(data_fitted,fitted)
-    fitted_cov<-coef(bw)[,2]
-    data_fitted_cov<-cbind(data_fitted_cov,fitted_cov)
-}
-return(list(data_fitted=data_fitted,data_fitted_cov=data_fitted_cov))
-}
-
 set.seed(4351)
 data.vcfit<-vc.fit(agent=agent,data_observe=data_observe,x_cov=x_cov)
 saveRDS(data.vcfit, file = "data.vcfit.rds")
 ```
 
-
+The users can also directly load the fitted model
 ```{r,message=FALSE}
 data.vcfit<-readRDS(file = "data.vcfit.rds")
 ```
 
-Visualize the fitting
-
+Run the following codes to visualize the fitting curves
 ```{r,message=FALSE}
 id_sub<-8
 {par(mfrow = c(1, 2))
 #for smoking group
-plot(x=agent[x_cov==1],y=data_observe[x_cov==1,id_sub],col="red",frame = FALSE,ylab="Expression",xlab="Agent")
+plot(x=agent[x_cov==1],y=data_observe[x_cov==1,id_sub],col="red",frame = FALSE,ylab="Expression",xlab="Agent",main="Smoking")
 lines(y=data.vcfit$data_fitted[,id_sub]+data.vcfit$data_fitted_cov[,id_sub],x=agent,col="red")
 
 #for non-smoking group
-plot(x=agent[x_cov==0],y=data_observe[x_cov==0,id_sub],col="blue",ylab="Expression",xlab="Agent")
+plot(x=agent[x_cov==0],y=data_observe[x_cov==0,id_sub],col="blue",ylab="Expression",xlab="Agent",main="Non-smoking")
 lines(y=data.vcfit$data_fitted[,id_sub],x=agent,col="blue")}
 ```
 
 
 # Generate base matrix for the network model
-
+The base matrix is the key component for the network learning in a non-parametric manner. Run the function `base.construct` to construct the base matrix for the varying intercept and base matrix for the varying coefficient of smoking
 ```{r,message=FALSE,eval=FALSE}
 data_fitted<-data.vcfit$data_fitted
 data_fitted_cov<-data.vcfit$data_fitted_cov
@@ -190,15 +175,15 @@ agent=agent,
 x_cov=x_cov)
 
 saveRDS(base.output, file = "base.output.rds")
-  
 ```
 
+The constructed base matrices can be also loaded by
 ```{r,message=FALSE}
 base.output<-readRDS(file = "base.output.rds")
 ```
 
 # Train the network model
-
+With base matrices, it is ready to learn the network by the function `network.learn`
 ```{r,message=FALSE,eval=FALSE}
 X_big<-base.output$X_big
 X_big_cov<-base.output$X_big_cov
@@ -224,6 +209,7 @@ saveRDS(network.output, file = "network.output.rds")
 saveRDS(data.list.t3, file = "data.list.t3.rds")
 ```
 
+The results from network learning can be also loaded by
 ```{r,message=FALSE,eval=FALSE}
 network.output<-readRDS(file = "network.output.rds")
 ```
