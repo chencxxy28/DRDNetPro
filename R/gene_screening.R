@@ -1,11 +1,11 @@
-#'@title Gene screening based on the Spearman correlation
-#'@description A specified estimating equation for ELCIC under GLM. This estimating equation is used for marginal mean selection.
+#'@title Gene screening based on the Spearman correlation.
+#'@description This function can be used to screen the genes based on Spearman correlation coefficient.
 #'@usage spearman_screen(index_data,data_vessel,size)
-#'@param index_data A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in
-#'@param data_vessel A vector containing outcomes.
-#'@param size A plug-in estimator solved by an external estimating procedure.
+#'@param index_data The data including imputed agent.
+#'@param data_vessel The gene expression matrix.
+#'@param size The number of selected genes.
 #'
-#'@return A matrix containing values of calculated estimating equations.
+#'@return The vector containing the index for the selected genes.
 #'@export
 
 spearman_screen<-function(index_data,data_vessel,size)
@@ -44,14 +44,13 @@ spearman_screen<-function(index_data,data_vessel,size)
 
 
 
-#'@title Estimating equation for ELCIC under GLM
-#'@description A specified estimating equation for ELCIC under GLM. This estimating equation is used for marginal mean selection.
+#'@title Gene selection based on the test of differential gene expression.
+#'@description This function can be used to select the genes based on the test of differential gene expression.
 #'@usage test_screen(data_vessel,group,covariate)
-#'@param data_vessel A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in
-#'@param group A vector containing outcomes.
-#'@param covariate A plug-in estimator solved by an external estimating procedure.
-#'
-#'@return A matrix containing values of calculated estimating equations.
+#'@param data_vessel The gene expression matrix.
+#'@param group The vector including disease status (0 and 1).
+#'@param covariate The vector including covariate values (eg., smoking: 0 and 1).
+#'@return The vector containing the index for the selected genes.
 #'@export
 
 test_screen<-function(data_vessel,group,covariate){
