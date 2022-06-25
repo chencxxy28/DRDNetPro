@@ -2,29 +2,30 @@
 % Please edit documentation in R/network_learning.R
 \name{base.construct}
 \alias{base.construct}
-\title{Estimating equation for ELCIC under GLM}
+\title{The base generation function}
 \usage{
 base.construct(data_observe,data_fitted, degree=3,
 len.knots=3,data_fitted_cov,agent,x_cov)
 }
 \arguments{
-\item{data_observe}{A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in}
+\item{data_observe}{The gene expression matrix.}
 
-\item{data_fitted}{A vector containing outcomes.}
+\item{data_fitted}{The matrix containing varying intercepts.}
 
-\item{degree}{A plug-in estimator solved by an external estimating procedure.}
+\item{degree}{The degree in the B-spline base. The default is 3}
 
-\item{len.knots}{A plug-in estimator solved by an external estimating procedure.}
+\item{len.knots}{The number of knots. The default is 3}
 
-\item{data_fitted_cov}{A plug-in estimator solved by an external estimating procedure.}
+\item{data_fitted_cov}{The matrix containing varying covariate effects}
 
-\item{agent}{A plug-in estimator solved by an external estimating procedure.}
+\item{agent}{The imputed disease risk.}
 
-\item{x_cov}{A plug-in estimator solved by an external estimating procedure.}
+\item{x_cov}{The vector including covariate values (eg., smoking: 0 and 1).}
 }
 \value{
-A matrix containing values of calculated estimating equations.
+The list of four matrices based on varying intercepts, varying covariate effects, varying
+intercepts with the column containing ones, and varying covariates with the column containing ones.
 }
 \description{
-A specified estimating equation for ELCIC under GLM. This estimating equation is used for marginal mean selection.
+This function generates the base matrices used in the network learning.
 }
