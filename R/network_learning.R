@@ -1,6 +1,6 @@
 
-#'@title Estimating equation for ELCIC under GLM
-#'@description A specified estimating equation for ELCIC under GLM. This estimating equation is used for marginal mean selection.
+#'@title Fit a varying coefficient model
+#'@description This function fit the gene expression data into a varying coefficient model.
 #'@usage vc.fit(agent,data_observe,x_cov)
 #'@param data_observe A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in
 #'@param agent A plug-in estimator solved by an external estimating procedure.
