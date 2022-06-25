@@ -1,3 +1,37 @@
+
+#'@title Estimating equation for ELCIC under GLM
+#'@description A specified estimating equation for ELCIC under GLM. This estimating equation is used for marginal mean selection.
+#'@usage vc.fit<-function(agent,data_observe,x_cov)
+#'@param data_observe A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in
+#'@param agent A plug-in estimator solved by an external estimating procedure.
+#'@param x_cov A plug-in estimator solved by an external estimating procedure.
+#'@return A matrix containing values of calculated estimating equations.
+#'@export
+#'@import np splines2 grpreg Matrix pROC
+#'@importFrom graphics lines par
+#'@importFrom stats coef cor glm p.adjust
+
+vc.fit<-function(agent,data_observe,x_cov)
+{
+  t<-agent
+  #get fitted values of observations using varying coefficient kernel regression
+  data_fitted<-rep()
+  data_fitted_cov<-rep()
+  #bws<-0.01
+  for(i in 1:ncol(data_observe))
+  {
+    bw <- npscoefbw(formula=data_observe[,i]~x_cov|t,betas=T,regtype="ll")
+    bw <- npscoef(bw,betas=T,exdat=data.frame(x_cov=x_cov),ezdat=data.frame(t=t),regtype="ll")
+    fitted<-coef(bw)[,1]
+    data_fitted<-cbind(data_fitted,fitted)
+    fitted_cov<-coef(bw)[,2]
+    data_fitted_cov<-cbind(data_fitted_cov,fitted_cov)
+  }
+  return(list(data_fitted=data_fitted,data_fitted_cov=data_fitted_cov))
+}
+
+
+
 #'@title Estimating equation for ELCIC under GLM
 #'@description A specified estimating equation for ELCIC under GLM. This estimating equation is used for marginal mean selection.
 #'@usage base.construct(data_observe,data_fitted, degree=3,
