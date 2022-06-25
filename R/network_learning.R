@@ -2,10 +2,10 @@
 #'@title Fit a varying coefficient model
 #'@description This function fit the gene expression data into a varying coefficient model.
 #'@usage vc.fit(agent,data_observe,x_cov)
-#'@param data_observe A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in
-#'@param agent A plug-in estimator solved by an external estimating procedure.
-#'@param x_cov A plug-in estimator solved by an external estimating procedure.
-#'@return A matrix containing values of calculated estimating equations.
+#'@param data_observe The gene expression matrix.
+#'@param agent The imputed disease risk.
+#'@param x_cov The vector including covariate values (eg., smoking: 0 and 1).
+#'@return A list of two matrices including varying intercept and varying covariate effect, respective.
 #'@export
 #'@import np splines2 grpreg Matrix pROC
 #'@importFrom graphics lines par
@@ -32,18 +32,19 @@ vc.fit<-function(agent,data_observe,x_cov)
 
 
 
-#'@title Estimating equation for ELCIC under GLM
-#'@description A specified estimating equation for ELCIC under GLM. This estimating equation is used for marginal mean selection.
+#'@title The base generation function
+#'@description This function generates the base matrices used in the network learning.
 #'@usage base.construct(data_observe,data_fitted, degree=3,
 #'len.knots=3,data_fitted_cov,agent,x_cov)
-#'@param data_observe A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in
-#'@param data_fitted A vector containing outcomes.
-#'@param degree A plug-in estimator solved by an external estimating procedure.
-#'@param len.knots A plug-in estimator solved by an external estimating procedure.
-#'@param data_fitted_cov A plug-in estimator solved by an external estimating procedure.
-#'@param agent A plug-in estimator solved by an external estimating procedure.
-#'@param x_cov A plug-in estimator solved by an external estimating procedure.
-#'@return A matrix containing values of calculated estimating equations.
+#'@param data_observe The gene expression matrix.
+#'@param data_fitted The matrix containing varying intercepts.
+#'@param degree The degree in the B-spline base. The default is 3
+#'@param len.knots The number of knots. The default is 3
+#'@param data_fitted_cov The matrix containing varying covariate effects
+#'@param agent The imputed disease risk.
+#'@param x_cov The vector including covariate values (eg., smoking: 0 and 1).
+#'@return The list of four matrices based on varying intercepts, varying covariate effects, varying
+#'intercepts with the column containing ones, and varying covariates with the column containing ones.
 #'@export
 #'@import np splines2 grpreg Matrix pROC
 #'@importFrom graphics lines par
