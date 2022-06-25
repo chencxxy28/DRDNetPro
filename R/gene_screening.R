@@ -1,4 +1,4 @@
-#'@title Estimating equation for ELCIC under GLM
+#'@title Gene screening based on the Spearman correlation
 #'@description A specified estimating equation for ELCIC under GLM. This estimating equation is used for marginal mean selection.
 #'@usage spearman_screen(index_data,data_vessel,size)
 #'@param index_data A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in
