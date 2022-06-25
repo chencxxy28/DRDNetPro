@@ -2,20 +2,20 @@
 % Please edit documentation in R/gene_screening.R
 \name{test_screen}
 \alias{test_screen}
-\title{Estimating equation for ELCIC under GLM}
+\title{Gene selection based on the test of differential gene expression.}
 \usage{
 test_screen(data_vessel,group,covariate)
 }
 \arguments{
-\item{data_vessel}{A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in}
+\item{data_vessel}{The gene expression matrix.}
 
-\item{group}{A vector containing outcomes.}
+\item{group}{The vector including disease status (0 and 1).}
 
-\item{covariate}{A plug-in estimator solved by an external estimating procedure.}
+\item{covariate}{The vector including covariate values (eg., smoking: 0 and 1).}
 }
 \value{
-A matrix containing values of calculated estimating equations.
+The vector containing the index for the selected genes.
 }
 \description{
-A specified estimating equation for ELCIC under GLM. This estimating equation is used for marginal mean selection.
+This function can be used to select the genes based on the test of differential gene expression.
 }
