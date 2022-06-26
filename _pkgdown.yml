@@ -1,5 +1,4 @@
 
-
 title: DRDNetPro
 url: https://chencxxy28.github.io/DRDNetPro/
 template:
@@ -32,3 +31,5 @@ navbar:
         text: "Functions"
         href: reference/index.html
 
+# resource_files:
+#   - raw/main/man/figures/Bio_protocal_paper_06252022.png
