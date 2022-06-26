@@ -2,35 +2,39 @@
 % Please edit documentation in R/network_learning.R
 \name{network.learn}
 \alias{network.learn}
-\title{Estimating equation for ELCIC under GLM}
+\title{Network learning}
 \usage{
 network.learn(data_observe,x_cov,X_big_int,X_big_int_cov,
 agent,degree=3,len.knots=3,cv=TRUE,nfolds=20,alpha=1)
 }
 \arguments{
-\item{data_observe}{A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in}
+\item{data_observe}{The gene expression matrix.}
 
-\item{x_cov}{A plug-in estimator solved by an external estimating procedure.}
+\item{x_cov}{The vector including covariate values (eg., smoking: 0 and 1).}
 
-\item{X_big_int}{A vector containing outcomes.}
+\item{X_big_int}{The matrix based on varying intercepts with the column
+containing ones. It can be extracted from the output of function `base.construct`.}
 
-\item{X_big_int_cov}{A vector containing outcomes.}
+\item{X_big_int_cov}{(X_big_int), The matrix based on varying covariates with the column
+containing ones. It can be extracted from the output of function `base.construct`.}
 
-\item{agent}{A plug-in estimator solved by an external estimating procedure.}
+\item{agent}{The imputed disease risk.}
 
-\item{degree}{A plug-in estimator solved by an external estimating procedure.}
+\item{degree}{The degree in the B-spline base. The default is 3}
 
-\item{len.knots}{A plug-in estimator solved by an external estimating procedure.}
+\item{len.knots}{The number of knots. The default is 3}
 
-\item{cv}{A plug-in estimator solved by an external estimating procedure.}
+\item{cv}{Use cross-validation or not. The default is TRUE. If cv=FALSE,
+then BIC method will be applied.}
 
-\item{nfolds}{A plug-in estimator solved by an external estimating procedure.}
+\item{nfolds}{The number of folds used in cross-validation.
+Only workable when cv=TRUE.}
 
-\item{alpha}{A plug-in estimator solved by an external estimating procedure.}
+\item{alpha}{0 or 1 values: 1: LASSO; 0: ridge regression.}
 }
 \value{
-A matrix containing values of calculated estimating equations.
+Network results (add later??)
 }
 \description{
-A specified estimating equation for ELCIC under GLM. This estimating equation is used for marginal mean selection.
+This function can be used to learn the networks related to disease prograssion.
 }
