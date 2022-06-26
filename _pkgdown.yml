@@ -21,13 +21,13 @@ navbar:
             href: articles/NAME-OF-VIGNETTE.html
           - text: -------
           - text: Tutorial 1
-            href: articles/web/Tutorial 1.html
+            href: articles/web/Tutorial1.html
           - text: -------
           - text: Tutorial 2
-            href: articles/web/Tutorial 2.html
+            href: articles/web/Tutorial2.html
           - text: -------
           - text: Tutorial 3
-            href: articles/web/Tutorial 3.html
+            href: articles/web/Tutorial3.html
     Function:
         text: "Functions"
         href: reference/index.html
