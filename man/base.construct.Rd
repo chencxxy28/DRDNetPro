@@ -23,8 +23,8 @@ len.knots=3,data_fitted_cov,agent,x_cov)
 \item{x_cov}{The vector including covariate values (eg., smoking: 0 and 1).}
 }
 \value{
-The list of four matrices based on varying intercepts, varying covariate effects, varying
-intercepts with the column containing ones, and varying covariates with the column containing ones.
+The list of four matrices based on varying intercepts (X_big), varying covariate effects (X_big_cov), varying
+intercepts with the column containing ones (X_big_int), and varying covariates with the column containing ones (X_big_int_cov).
 }
 \description{
 This function generates the base matrices used in the network learning.
