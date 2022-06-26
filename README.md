@@ -20,3 +20,5 @@ devtools::install_github("chencxxy28/DRDNetPro")
 # Vignettes
 
 Please visit [Tutorial](https://chencxxy28.github.io/DRDNetPro/articles/NAME-OF-VIGNETTE.html)
+
+The DRDNet paper is published at [Bioinformatics](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533)
