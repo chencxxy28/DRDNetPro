@@ -43,8 +43,8 @@ vc.fit<-function(agent,data_observe,x_cov)
 #'@param data_fitted_cov The matrix containing varying covariate effects
 #'@param agent The imputed disease risk.
 #'@param x_cov The vector including covariate values (eg., smoking: 0 and 1).
-#'@return The list of four matrices based on varying intercepts, varying covariate effects, varying
-#'intercepts with the column containing ones, and varying covariates with the column containing ones.
+#'@return The list of four matrices based on varying intercepts (X_big), varying covariate effects (X_big_cov), varying
+#'intercepts with the column containing ones (X_big_int), and varying covariates with the column containing ones (X_big_int_cov).
 #'@export
 #'@import np splines2 grpreg Matrix pROC
 #'@importFrom graphics lines par
@@ -138,21 +138,25 @@ base.construct<-function(data_observe=data_observe,
 
 
 
-#'@title Estimating equation for ELCIC under GLM
-#'@description A specified estimating equation for ELCIC under GLM. This estimating equation is used for marginal mean selection.
+#'@title Network learning
+#'@description This function can be used to learn the networks related to disease prograssion.
 #'@usage network.learn(data_observe,x_cov,X_big_int,X_big_int_cov,
 #'agent,degree=3,len.knots=3,cv=TRUE,nfolds=20,alpha=1)
-#'@param data_observe A matrix containing covariates. The first column should be all ones corresponding to the intercept. See more details in
-#'@param x_cov A plug-in estimator solved by an external estimating procedure.
-#'@param X_big_int A vector containing outcomes.
-#'@param X_big_int_cov A vector containing outcomes.
-#'@param agent A plug-in estimator solved by an external estimating procedure.
-#'@param degree A plug-in estimator solved by an external estimating procedure.
-#'@param len.knots A plug-in estimator solved by an external estimating procedure.
-#'@param cv A plug-in estimator solved by an external estimating procedure.
-#'@param nfolds A plug-in estimator solved by an external estimating procedure.
-#'@param alpha A plug-in estimator solved by an external estimating procedure.
-#'@return A matrix containing values of calculated estimating equations.
+#'@param data_observe The gene expression matrix.
+#'@param x_cov The vector including covariate values (eg., smoking: 0 and 1).
+#'@param X_big_int The matrix based on varying intercepts with the column
+#'containing ones. It can be extracted from the output of function `base.construct`.
+#'@param X_big_int_cov (X_big_int), The matrix based on varying covariates with the column
+#'containing ones. It can be extracted from the output of function `base.construct`.
+#'@param agent The imputed disease risk.
+#'@param degree The degree in the B-spline base. The default is 3
+#'@param len.knots The number of knots. The default is 3
+#'@param cv Use cross-validation or not. The default is TRUE. If cv=FALSE,
+#'then BIC method will be applied.
+#'@param nfolds The number of folds used in cross-validation.
+#'Only workable when cv=TRUE.
+#'@param alpha 0 or 1 values: 1: LASSO; 0: ridge regression.
+#'@return Network results (add later??)
 #'@export
 
 network.learn<-function(data_observe=data_observe,
