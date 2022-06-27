@@ -81,7 +81,7 @@ head(pheno_together)
 write.csv(pheno_together,"pheno_together.csv",row.names =F)
 ```
 
-This is the end of the Tutorial 1, please visit [Tutorial 2](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial%202.html) for the next step of network learning 
+This is the end of the Tutorial 1, please visit [Tutorial 2](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial2.html) for the next step of network learning 
 
 
 
