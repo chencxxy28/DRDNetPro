@@ -17,21 +17,23 @@ knitr::opts_knit$set(root.dir = '/Users/chixiang.chen/OneDrive - University of M
 
 If the user hasn't gone through the Tutorial 1, please visit [Tutorial 2](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial2.html) for the second step of training the network model. 
 
+To begin with, load the following packages
+
 ```{r}
-library(np)
-library(splines2)
-library(grpreg)
-library(Matrix)
+library(igraph)
+
 ```
 
-
+The data we need to use in this tutorial is [network.output], [data.list.t3], and [85_gene_name_information]
 ```{r,message=FALSE}
-library(igraph)
 ##need data
 network.output<-readRDS(file = "network.output.rds")
 data.list.t3<-readRDS(file = "data.list.t3.rds")
 gene_exact_names<-read.csv(file="85_gene_name_information.csv")
+```
 
+Extract detailed data about gene expression data, covariate vector, imputed agent, self-node size for baseline, self-node size for covariate effect, overall self-node size, gene interaction effects from the baseline, gene interaction effects from the covariate, and overall gene interaction effects.
+```{r,message=FALSE}
 data_observe<-data.list.t3$data_observe
 x_cov<-data.list.t3$x_cov
 agent<-data.list.t3$agent
@@ -39,11 +41,13 @@ agent<-data.list.t3$agent
 self_size<-network.output$self_size
 self_size_cov<-network.output$self_size_cov
 self_size_all<-network.output$self_size_all
+
 gene_whole_cov<-network.output$gene_whole_cov
 gene_whole_all<-network.output$gene_whole_all
 gene_whole<-network.output$gene_whole
 ```
 
+To visualize the pseudo dynamic network given an agent value, a useful tool is `igraph` package. It allows the self-designed network structure. More detailed tutorial about igraph can be found in [igraph](https://kateto.net/networks-r-igraph). The following is a demo code for visualizing the recovered baseline network, where the disease risk is changing from 0 (low risk) to 0.86 (high risk). 
 ```{r,message=FALSE}
 ##network for x=0 at i=250 after some tuning
 par(mfrow = c(1, 1))
@@ -123,6 +127,9 @@ for (i in c(250))
                 vertex.label.color="blue",vertex.label.cex=0.7,mark.border=NA)
 }
 ```
+
+
+The following is a demo code for visualizing three recovered covariate-effect networks, where the disease risk is changing from 0 (no risk) to 0.10 (low risk), from 0 (no risk) to 0.42 (moderate risk), and from 0 (no risk) to 0.86 (high risk). 
 
 ```{r,message=FALSE}
 {par(mfrow = c(1, 3))
