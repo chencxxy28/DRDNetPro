@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = '/Users/chixiang.chen/OneDrive - University of Maryland School of Medicine/phd_in_psu/research/Prof._Wu/Network/tissue/blood_vessel/')
 ```
 
-**DRDNetPro** is a statistical learning algorithm for recovering disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the first step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). The data we will use in this tutorial is named [pheno_used].
+**DRDNetPro** is a statistical learning algorithm for recovering disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the first step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). The data we will use in this tutorial is named [pheno_used](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_used.csv).
 
 To begin with, we need to install the following packages in R
 
@@ -26,8 +26,12 @@ devtools::install_github("chencxxy28/DRDNetPro")
 ```
 
 
-```{r}
+```{r,message=FALSE}
 library(pROC)
+library(ranger)
+library(xgboost)
+library(dplyr)    
+
 readRDSFromWeb <- function(ref) {
   readRDS(gzcon(url(ref)))
 }
@@ -55,10 +59,79 @@ summary(rate)
 ```
 
 ## Random forest
-add later??
+Random forest is an ensemble of decision trees. It builds and combines multiple decision trees to get more accurate predictions. It’s a non-linear classification algorithm. Each decision tree model is used when employed on its own. An error estimate of cases is made that is not used when constructing the tree. This is called an out of bag error estimate mentioned as a percentage. There are several R packages available: one is `randomForest`, and one is `ranger`. Please refer to [random forest](http://www.css.cornell.edu/faculty/dgr2/_static/files/R_html/CompareRandomForestPackages.html#2_Random_forest_with_randomForest) for more details. This section provides a demo code based on the package `ranger`.
+
+Create the data for `ranger`, the outcome should be a factor.
+```{r,message=FALSE,eval=FALSE}
+mydata<-pheno_used
+mydata$MHHTN<-as.factor(mydata$MHHTN)
+```
+
+Run the following code to train the model. Note that some parameters, such as the number of variables, can be further tuned. Please refer [random forest](http://www.css.cornell.edu/faculty/dgr2/_static/files/R_html/CompareRandomForestPackages.html#2_Random_forest_with_randomForest) for more information.
+```{r,message=FALSE,eval=FALSE}
+rf<-ranger(MHHTN~., num.trees=1000,data=mydata,replace=T,write.forest = T,probability = T)
+rate.rf<-predict(rf, mydata)$predictions[,2]
+summary(rate.rf)
+```
 
 ## XGBoost
-add later??
+XGBoost an efficient implementation of gradient boosting framework. It provides built-in k-fold cross-validation
+Stochastic GBM with column and row sampling (per split and per tree) for better generalization,
+includes efficient linear model solver and tree learning algorithms, and supports various objective functions, including regression, classification and ranking. Please refer to [gradient boosting](http://uc-r.github.io/gbm_regression) for more details. This section provides a demo code based on the package `XGBoost`.
+
+XGBoost requires a specific type of input data, which can be run by the following code
+
+```{r,message=FALSE,eval=FALSE}
+mydata<-pheno_used
+
+# variable names
+features <- setdiff(names(mydata), "MHHTN")
+# Create the treatment plan from the training data
+treatplan <- vtreat::designTreatmentsZ(mydata, features, verbose = FALSE)
+# Get the "clean" variable names from the scoreFrame
+new_vars <- treatplan %>%
+  magrittr::use_series(scoreFrame) %>%        
+  dplyr::filter(code %in% c("clean", "lev")) %>% 
+  magrittr::use_series(varName) 
+# Prepare the training data
+features_train <- vtreat::prepare(treatplan, mydata, varRestriction = new_vars) %>% as.matrix()
+response_train <- mydata$MHHTN
+```
+
+Tune the number of trees that minimizes the erro
+```{r,message=FALSE,eval=FALSE}
+xgb.fit1 <- xgb.cv(
+  data = features_train,
+  label = response_train,
+  nrounds = 1000,
+  nfold = 5,
+  objective = "binary:logistic",  # for regression models
+  verbose = 0 ,              # silent,
+  early_stopping_rounds = 10 # stop if no improvement for 10 consecutive trees
+)
+
+vect=xgb.fit1$evaluation_log %>%
+  dplyr::summarise(
+    ntrees.train = which(train_logloss_mean == min(train_logloss_mean))[1],
+    rmse.train   = min(train_logloss_mean),
+    ntrees.test  = which(test_logloss_mean == min(test_logloss_mean))[1],
+    rmse.test   = min(test_logloss_mean),
+  )
+```
+
+Run the final trained model to obtain the predicted agent
+```{r,message=FALSE,eval=FALSE}
+#final estimate
+xgb.fit.final <- xgboost(
+  data = features_train,
+  label = response_train,
+  nrounds = as.numeric(vect[3]),
+  objective = "binary:logistic",  # for regression models
+  verbose = 0              # silent,
+)
+rate.xgb = predict(xgb.fit.final, features_train,type="response")
+summary(rate.xgb)
+```
 
 # Predict and evaluate the agent
 When the agent is imputed, it is better to check its prediction performance. Note that the pseudo-dynamic network is sensitive to the values of agent, and the agent with good prediction to the disease risk is more preferred. To check its performance, we can use ROC and AUC value. For evaluation purpose, we need to create a training data and testing data. The training data is used for data fitting, whereas the testing data is used for prediction evaluation. Below, we consider 90% of data for training and 10% of data for testing.
