@@ -11,7 +11,7 @@ navbar:
   bg: dark
   type: inverse
   structure:
-    left: [Tutorial, Function]
+    left: [Tutorial, Function, Data]
   components:
     Tutorial:
       text: Tutorial
@@ -28,8 +28,11 @@ navbar:
           - text: Tutorial 3
             href: articles/web/Tutorial3.html
     Function:
-        text: "Functions"
+        text: Functions
         href: reference/index.html
+    Data:
+        text: Data
+        href: articles/web/data.html
 
 # resource_files:
 #   - raw/main/man/figures/Bio_protocal_paper_06252022.png
