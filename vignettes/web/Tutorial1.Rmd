@@ -28,6 +28,9 @@ devtools::install_github("chencxxy28/DRDNetPro")
 
 ```{r}
 library(pROC)
+readRDSFromWeb <- function(ref) {
+  readRDS(gzcon(url(ref)))
+}
 ```
 
 # Prepare the data for training the agent
@@ -35,7 +38,7 @@ Before predicting the agent, the users need to prepare the data for training the
 
 ```{r,message=FALSE}
 #read the data
-pheno_raw<-read.csv("pheno_used.csv")
+pheno_raw<-read.csv("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_used.csv")
 #rearrange the data
 pheno_used<-data.frame(MHHTN=pheno_raw$MHHTN,pheno_raw[,!(colnames(pheno_raw) %in% c("MHHTN","SUBJID"))])
 head(pheno_used)
