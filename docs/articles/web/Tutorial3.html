@@ -124,19 +124,23 @@ provide detailed information for the third step of implementing the <a href="htt
 <pre><code><span class="co">## The following object is masked from 'package:base':</span>
 <span class="co">## </span>
 <span class="co">##     union</span></code></pre>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">readRDSFromWeb</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ref</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/gzcon.html" class="external-link">gzcon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">url</a></span><span class="op">(</span><span class="va">ref</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
 <p>The data we need to use in this tutorial is [network.output],
 [data.list.t3], and [85_gene_name_information]</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">##need data</span>
-<span class="va">network.output</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"network.output.rds"</span><span class="op">)</span>
-<span class="va">data.list.t3</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"data.list.t3.rds"</span><span class="op">)</span>
-<span class="va">gene_exact_names</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span>file<span class="op">=</span><span class="st">"85_gene_name_information.csv"</span><span class="op">)</span></code></pre></div>
+<span class="va">network.output</span><span class="op">&lt;-</span><span class="fu">readRDSFromWeb</span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/network.output.rds"</span><span class="op">)</span>
+<span class="va">data.list.t3</span><span class="op">&lt;-</span><span class="fu">readRDSFromWeb</span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data.list.t3.rds"</span><span class="op">)</span>
+<span class="va">gene_exact_names</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span>file<span class="op">=</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/85_gene_name_information.csv"</span><span class="op">)</span></code></pre></div>
 <p>Extract detailed data about gene expression data, covariate vector,
 imputed agent, self-node size for baseline, self-node size for covariate
 effect, overall self-node size, gene interaction effects from the
 baseline, gene interaction effects from the covariate, and overall gene
 interaction effects.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_observe</span><span class="op">&lt;-</span><span class="va">data.list.t3</span><span class="op">$</span><span class="va">data_observe</span>
 <span class="va">x_cov</span><span class="op">&lt;-</span><span class="va">data.list.t3</span><span class="op">$</span><span class="va">x_cov</span>
 <span class="va">agent</span><span class="op">&lt;-</span><span class="va">data.list.t3</span><span class="op">$</span><span class="va">agent</span>
@@ -154,7 +158,7 @@ network structure. More detailed tutorial about igraph can be found in
 <a href="https://kateto.net/networks-r-igraph" class="external-link">igraph</a>. The following
 is a demo code for visualizing the recovered baseline network, where the
 disease risk is changing from 0 (no risk) to 0.86 (high risk).</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">##network for x=0 at i=250 after some tuning</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>cex<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
@@ -237,7 +241,7 @@ disease risk is changing from 0 (no risk) to 0.86 (high risk).</p>
 covariate-effect networks, where the disease risk is changing from 0 (no
 risk) to 0.10 (low risk), from 0 (no risk) to 0.42 (moderate risk), and
 from 0 (no risk) to 0.86 (high risk).</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span>
 <span class="va">tunned_value</span><span class="op">&lt;-</span><span class="fl">0.01</span>
 <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">100</span>,<span class="fl">250</span><span class="op">)</span><span class="op">)</span>
