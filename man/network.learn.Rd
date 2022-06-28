@@ -33,7 +33,9 @@ Only workable when cv=TRUE.}
 \item{alpha}{0 or 1 values: 1: LASSO; 0: ridge regression.}
 }
 \value{
-Network results (add later??)
+The list of network properties: self-node size for baseline, self-node size for covariate effect,
+overall self-node size, gene interaction effects from the baseline, gene interaction effects from the covariate,
+and overall gene interaction effects
 }
 \description{
 This function can be used to learn the networks related to disease prograssion.
