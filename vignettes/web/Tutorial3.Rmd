@@ -47,7 +47,7 @@ gene_whole_all<-network.output$gene_whole_all
 gene_whole<-network.output$gene_whole
 ```
 
-To visualize the pseudo dynamic network given an agent value, a useful tool is `igraph` package. It allows the self-designed network structure. More detailed tutorial about igraph can be found in [igraph](https://kateto.net/networks-r-igraph). The following is a demo code for visualizing the recovered baseline network, where the disease risk is changing from 0 (low risk) to 0.86 (high risk). 
+To visualize the pseudo dynamic network given an agent value, a useful tool is `igraph` package. It allows the self-designed network structure. More detailed tutorial about igraph can be found in [igraph](https://kateto.net/networks-r-igraph). The following is a demo code for visualizing the recovered baseline network, where the disease risk is changing from 0 (no risk) to 0.86 (high risk). 
 ```{r,message=FALSE}
 ##network for x=0 at i=250 after some tuning
 par(mfrow = c(1, 1))
