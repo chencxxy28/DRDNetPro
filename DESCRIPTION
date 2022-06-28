@@ -15,4 +15,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-Imports: Matrix, grpreg, np, pROC, splines2
+Imports: Matrix, grpreg, np, pROC, splines2, ranger, xgboost
