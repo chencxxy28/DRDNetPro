@@ -128,13 +128,14 @@ provide detailed information for the third step of implementing the <a href="htt
 <code class="sourceCode R"><span class="va">readRDSFromWeb</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ref</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/gzcon.html" class="external-link">gzcon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">url</a></span><span class="op">(</span><span class="va">ref</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<p>The data we need to use in this tutorial is [network.output],
-[data.list.t3], and [85_gene_name_information]</p>
+<p>The data we need to use in this tutorial is <a href="https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/network.output.rds" class="external-link">network.output</a>,
+<a href="https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data.list.t3.rds" class="external-link">data.list.t3</a>,
+and <a href="https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/85_gene_name_information.csv" class="external-link">85_gene_name_information</a></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">##need data</span>
 <span class="va">network.output</span><span class="op">&lt;-</span><span class="fu">readRDSFromWeb</span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/network.output.rds"</span><span class="op">)</span>
 <span class="va">data.list.t3</span><span class="op">&lt;-</span><span class="fu">readRDSFromWeb</span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data.list.t3.rds"</span><span class="op">)</span>
-<span class="va">gene_exact_names</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span>file<span class="op">=</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/85_gene_name_information.csv"</span><span class="op">)</span></code></pre></div>
+<span class="va">gene_exact_names</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/85_gene_name_information.csv"</span><span class="op">)</span></code></pre></div>
 <p>Extract detailed data about gene expression data, covariate vector,
 imputed agent, self-node size for baseline, self-node size for covariate
 effect, overall self-node size, gene interaction effects from the
