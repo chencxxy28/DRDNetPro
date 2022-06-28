@@ -111,7 +111,7 @@ steady-state data. It incorporates risk prediction model, a varying
 coefficient model, multiple ordinary differential equations, and group
 lasso estimation to learn a series of networks.This tutorial will
 provide detailed information for the first step of implementing the <a href="https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533" class="external-link">DRDNet</a>.
-The data we will use in this tutorial is named [pheno_used].</p>
+The data we will use in this tutorial is named <a href="https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_used.csv" class="external-link">pheno_used</a>.</p>
 <p>To begin with, we need to install the following packages in R</p>
 <div class="section level1">
 <h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -122,15 +122,14 @@ The data we will use in this tutorial is named [pheno_used].</p>
 <span class="op">}</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"chencxxy28/DRDNetPro"</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://expasy.org/tools/pROC/" class="external-link">pROC</a></span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Type 'citation("pROC")' for a citation.</span></code></pre>
-<pre><code><span class="co">## </span>
-<span class="co">## Attaching package: 'pROC'</span></code></pre>
-<pre><code><span class="co">## The following objects are masked from 'package:stats':</span>
-<span class="co">## </span>
-<span class="co">##     cov, smooth, var</span></code></pre>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">readRDSFromWeb</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ref</span><span class="op">)</span> <span class="op">{</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://expasy.org/tools/pROC/" class="external-link">pROC</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/imbs-hl/ranger" class="external-link">ranger</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dmlc/xgboost" class="external-link">xgboost</a></span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Warning: package 'xgboost' was built under R version 4.1.2</span></code></pre>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>    
+
+<span class="va">readRDSFromWeb</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ref</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/gzcon.html" class="external-link">gzcon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">url</a></span><span class="op">(</span><span class="va">ref</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 </div>
@@ -147,7 +146,7 @@ in the matrix should be numeric. The missing data is allowed in this
 training process, though it is always recommended to have a complete
 data as an input. The following working data is from one sample of data
 in GTEx project and de-identified.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#read the data</span>
 <span class="va">pheno_raw</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_used.csv"</span><span class="op">)</span>
 <span class="co">#rearrange the data</span>
@@ -180,7 +179,7 @@ interest.</p>
 <div class="section level2">
 <h2 id="logistic-regression">logistic regression<a class="anchor" aria-label="anchor" href="#logistic-regression"></a>
 </h2>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">MHHTN</span><span class="op">~</span><span class="va">AGE</span><span class="op">+</span><span class="va">HGHT</span><span class="op">+</span><span class="va">BMI</span><span class="op">+</span><span class="va">MHASTHMA</span><span class="op">+</span><span class="va">MHCOPD</span><span class="op">+</span><span class="va">MHHRTATT</span><span class="op">+</span><span class="va">MHHRTDIS</span><span class="op">+</span><span class="va">MHT1D</span><span class="op">+</span><span class="va">MHT2D</span><span class="op">+</span><span class="va">MHDRNKSTS</span><span class="op">+</span><span class="va">SEX</span>,data<span class="op">=</span><span class="va">pheno_used</span>,family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span>link <span class="op">=</span> <span class="st">"logit"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">rate</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rate</span><span class="op">)</span></code></pre></div>
@@ -190,12 +189,88 @@ interest.</p>
 <div class="section level2">
 <h2 id="random-forest">Random forest<a class="anchor" aria-label="anchor" href="#random-forest"></a>
 </h2>
-<p>add later??</p>
+<p>Random forest is an ensemble of decision trees. It builds and
+combines multiple decision trees to get more accurate predictions. It’s
+a non-linear classification algorithm. Each decision tree model is used
+when employed on its own. An error estimate of cases is made that is not
+used when constructing the tree. This is called an out of bag error
+estimate mentioned as a percentage. There are several R packages
+available: one is <code>randomForest</code>, and one is
+<code>ranger</code>. Please refer to <a href="http://www.css.cornell.edu/faculty/dgr2/_static/files/R_html/CompareRandomForestPackages.html#2_Random_forest_with_randomForest" class="external-link">random
+forest</a> for more details. This section provides a demo code based on
+the package <code>ranger</code>.</p>
+<p>Create the data for <code>ranger</code>, the outcome should be a
+factor.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mydata</span><span class="op">&lt;-</span><span class="va">pheno_used</span>
+<span class="va">mydata</span><span class="op">$</span><span class="va">MHHTN</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">mydata</span><span class="op">$</span><span class="va">MHHTN</span><span class="op">)</span></code></pre></div>
+<p>Run the following code to train the model. Note that some parameters,
+such as the number of variables, can be further tuned. Please refer <a href="http://www.css.cornell.edu/faculty/dgr2/_static/files/R_html/CompareRandomForestPackages.html#2_Random_forest_with_randomForest" class="external-link">random
+forest</a> for more information.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">rf</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">MHHTN</span><span class="op">~</span><span class="va">.</span>, num.trees<span class="op">=</span><span class="fl">1000</span>,data<span class="op">=</span><span class="va">mydata</span>,replace<span class="op">=</span><span class="cn">T</span>,write.forest <span class="op">=</span> <span class="cn">T</span>,probability <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+<span class="va">rate.rf</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">rf</span>, <span class="va">mydata</span><span class="op">)</span><span class="op">$</span><span class="va">predictions</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rate.rf</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="xgboost">XGBoost<a class="anchor" aria-label="anchor" href="#xgboost"></a>
 </h2>
-<p>add later??</p>
+<p>XGBoost an efficient implementation of gradient boosting framework.
+It provides built-in k-fold cross-validation Stochastic GBM with column
+and row sampling (per split and per tree) for better generalization,
+includes efficient linear model solver and tree learning algorithms, and
+supports various objective functions, including regression,
+classification and ranking. Please refer to <a href="http://uc-r.github.io/gbm_regression" class="external-link">gradient boosting</a> for
+more details. This section provides a demo code based on the package
+<code>XGBoost</code>.</p>
+<p>XGBoost requires a specific type of input data, which can be run by
+the following code</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mydata</span><span class="op">&lt;-</span><span class="va">pheno_used</span>
+
+<span class="co"># variable names</span>
+<span class="va">features</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">mydata</span><span class="op">)</span>, <span class="st">"MHHTN"</span><span class="op">)</span>
+<span class="co"># Create the treatment plan from the training data</span>
+<span class="va">treatplan</span> <span class="op">&lt;-</span> <span class="fu">vtreat</span><span class="fu">::</span><span class="fu"><a href="https://winvector.github.io/vtreat/reference/designTreatmentsZ.html" class="external-link">designTreatmentsZ</a></span><span class="op">(</span><span class="va">mydata</span>, <span class="va">features</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="co"># Get the "clean" variable names from the scoreFrame</span>
+<span class="va">new_vars</span> <span class="op">&lt;-</span> <span class="va">treatplan</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">use_series</a></span><span class="op">(</span><span class="va">scoreFrame</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>        
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">code</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"clean"</span>, <span class="st">"lev"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">use_series</a></span><span class="op">(</span><span class="va">varName</span><span class="op">)</span> 
+<span class="co"># Prepare the training data</span>
+<span class="va">features_train</span> <span class="op">&lt;-</span> <span class="fu">vtreat</span><span class="fu">::</span><span class="fu"><a href="https://winvector.github.io/vtreat/reference/prepare.html" class="external-link">prepare</a></span><span class="op">(</span><span class="va">treatplan</span>, <span class="va">mydata</span>, varRestriction <span class="op">=</span> <span class="va">new_vars</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">response_train</span> <span class="op">&lt;-</span> <span class="va">mydata</span><span class="op">$</span><span class="va">MHHTN</span></code></pre></div>
+<p>Tune the number of trees that minimizes the erro</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">xgb.fit1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.cv.html" class="external-link">xgb.cv</a></span><span class="op">(</span>
+  data <span class="op">=</span> <span class="va">features_train</span>,
+  label <span class="op">=</span> <span class="va">response_train</span>,
+  nrounds <span class="op">=</span> <span class="fl">1000</span>,
+  nfold <span class="op">=</span> <span class="fl">5</span>,
+  objective <span class="op">=</span> <span class="st">"binary:logistic"</span>,  <span class="co"># for regression models</span>
+  verbose <span class="op">=</span> <span class="fl">0</span> ,              <span class="co"># silent,</span>
+  early_stopping_rounds <span class="op">=</span> <span class="fl">10</span> <span class="co"># stop if no improvement for 10 consecutive trees</span>
+<span class="op">)</span>
+
+<span class="va">vect</span><span class="op">=</span><span class="va">xgb.fit1</span><span class="op">$</span><span class="va">evaluation_log</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>
+    ntrees.train <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">train_logloss_mean</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">train_logloss_mean</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,
+    rmse.train   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">train_logloss_mean</span><span class="op">)</span>,
+    ntrees.test  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">test_logloss_mean</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">test_logloss_mean</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,
+    rmse.test   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">test_logloss_mean</span><span class="op">)</span>,
+  <span class="op">)</span></code></pre></div>
+<p>Run the final trained model to obtain the predicted agent</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#final estimate</span>
+<span class="va">xgb.fit.final</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgboost</a></span><span class="op">(</span>
+  data <span class="op">=</span> <span class="va">features_train</span>,
+  label <span class="op">=</span> <span class="va">response_train</span>,
+  nrounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">vect</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span>,
+  objective <span class="op">=</span> <span class="st">"binary:logistic"</span>,  <span class="co"># for regression models</span>
+  verbose <span class="op">=</span> <span class="fl">0</span>              <span class="co"># silent,</span>
+<span class="op">)</span>
+<span class="va">rate.xgb</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">xgb.fit.final</span>, <span class="va">features_train</span>,type<span class="op">=</span><span class="st">"response"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rate.xgb</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div class="section level1">
@@ -209,7 +284,7 @@ value. For evaluation purpose, we need to create a training data and
 testing data. The training data is used for data fitting, whereas the
 testing data is used for prediction evaluation. Below, we consider 90%
 of data for training and 10% of data for testing.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span>
 <span class="va">sample.ind</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pheno_used</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">0.9</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pheno_used</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co">#id used for training</span>
 <span class="va">pheno_used_training</span><span class="op">&lt;-</span><span class="va">pheno_used</span><span class="op">[</span><span class="va">sample.ind</span>,<span class="op">]</span>
@@ -219,14 +294,14 @@ of data for training and 10% of data for testing.</p>
 
 <span class="va">test_prob</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit_train</span>, newdata <span class="op">=</span> <span class="va">pheno_used_testing</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>
 <span class="va">test_roc_specific</span> <span class="op">=</span><span class="fu"><a href="https://rdrr.io/pkg/pROC/man/roc.html" class="external-link">roc</a></span><span class="op">(</span><span class="va">pheno_used_testing</span><span class="op">$</span><span class="va">MHHTN</span> <span class="op">~</span> <span class="va">test_prob</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, print.auc <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><img src="Tutorial1_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="Tutorial1_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>The AUC value is around 0.83, which is desired. Similar procedure
 could be applied to the case with random forest or XGBoost. After the
 agent imputation, we can move forward to the stage of network learning,
 which is illustrated in <a href="https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial%202.html">Tutorial
 2</a>. Before the end of this tutorial, let us create a phenotypical
 data consisting of the imputed agent for the use in next tutorial.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pheno_subject_id</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substring</a></span><span class="op">(</span><span class="va">pheno_raw</span><span class="op">$</span><span class="va">SUBJID</span>,<span class="fl">6</span>,<span class="fl">10</span><span class="op">)</span>
 <span class="va">pheno_together</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">pheno_subject_id</span>,<span class="va">rate</span>,<span class="va">pheno_used</span><span class="op">$</span><span class="va">MHSMKSTS</span>,<span class="va">pheno_used</span><span class="op">$</span><span class="va">SEX</span>,<span class="va">pheno_used</span><span class="op">$</span><span class="va">HGHT</span>,<span class="va">pheno_used</span><span class="op">$</span><span class="va">BMI</span>,<span class="va">pheno_used</span><span class="op">$</span><span class="va">MHHTN</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">pheno_together</span><span class="op">)</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>,<span class="st">"rate"</span>,<span class="st">"smoke"</span>,<span class="st">"sex"</span>,<span class="st">"height"</span>,<span class="st">"bmi"</span>,<span class="st">"hyper"</span><span class="op">)</span>
@@ -238,7 +313,7 @@ data consisting of the imputed agent for the use in next tutorial.</p>
 <span class="co">## 4 111VG 0.890841096353928     0   0     69 29.53     0</span>
 <span class="co">## 5 111YS 0.946066339003859     1   0     72 30.78     1</span>
 <span class="co">## 6 1122O 0.694087589148978     1   1     66 32.76     1</span></code></pre>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">pheno_together</span>,<span class="st">"pheno_together.csv"</span>,row.names <span class="op">=</span><span class="cn">F</span><span class="op">)</span></code></pre></div>
 <p>This is the end of the Tutorial 1, please visit <a href="https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial2.html">Tutorial
 2</a> for the next step of network learning</p>
