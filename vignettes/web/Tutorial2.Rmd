@@ -33,7 +33,7 @@ readRDSFromWeb <- function(ref) {
 Before recovering the network, the users need to preprocess the gene expression data. This procedure will involve THE following two steps: gene expression preprocess and gene selection.
 
 ## Filtering and transformation
-First, read the data [pheno_together] and [data_vessel]
+First, read the data [pheno_together](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_together.csv) and [data_vessel](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data_vessel.csv).
 ```{r,message=FALSE}
 #read the data
 pheno_together<-read.csv("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_together.csv") # phenotype data
