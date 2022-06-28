@@ -21,15 +21,17 @@ To begin with, load the following packages
 
 ```{r}
 library(igraph)
-
+readRDSFromWeb <- function(ref) {
+  readRDS(gzcon(url(ref)))
+}
 ```
 
 The data we need to use in this tutorial is [network.output], [data.list.t3], and [85_gene_name_information]
 ```{r,message=FALSE}
 ##need data
-network.output<-readRDS(file = "network.output.rds")
-data.list.t3<-readRDS(file = "data.list.t3.rds")
-gene_exact_names<-read.csv(file="85_gene_name_information.csv")
+network.output<-readRDSFromWeb("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/network.output.rds")
+data.list.t3<-readRDSFromWeb("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data.list.t3.rds")
+gene_exact_names<-read.csv(file="https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/85_gene_name_information.csv")
 ```
 
 Extract detailed data about gene expression data, covariate vector, imputed agent, self-node size for baseline, self-node size for covariate effect, overall self-node size, gene interaction effects from the baseline, gene interaction effects from the covariate, and overall gene interaction effects.
