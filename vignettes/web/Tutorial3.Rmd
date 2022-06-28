@@ -26,12 +26,12 @@ readRDSFromWeb <- function(ref) {
 }
 ```
 
-The data we need to use in this tutorial is [network.output], [data.list.t3], and [85_gene_name_information]
+The data we need to use in this tutorial is [network.output](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/network.output.rds), [data.list.t3](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data.list.t3.rds), and [85_gene_name_information](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/85_gene_name_information.csv)
 ```{r,message=FALSE}
 ##need data
 network.output<-readRDSFromWeb("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/network.output.rds")
 data.list.t3<-readRDSFromWeb("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data.list.t3.rds")
-gene_exact_names<-read.csv(file="https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/85_gene_name_information.csv")
+gene_exact_names<-read.csv("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/85_gene_name_information.csv")
 ```
 
 Extract detailed data about gene expression data, covariate vector, imputed agent, self-node size for baseline, self-node size for covariate effect, overall self-node size, gene interaction effects from the baseline, gene interaction effects from the covariate, and overall gene interaction effects.
