@@ -211,6 +211,8 @@ forest</a> for more information.</p>
 <code class="sourceCode R"><span class="va">rf</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">MHHTN</span><span class="op">~</span><span class="va">.</span>, num.trees<span class="op">=</span><span class="fl">1000</span>,data<span class="op">=</span><span class="va">mydata</span>,replace<span class="op">=</span><span class="cn">T</span>,write.forest <span class="op">=</span> <span class="cn">T</span>,probability <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
 <span class="va">rate.rf</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">rf</span>, <span class="va">mydata</span><span class="op">)</span><span class="op">$</span><span class="va">predictions</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rate.rf</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">## 0.02729 0.34435 0.58514 0.55633 0.81330 0.98051</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="xgboost">XGBoost<a class="anchor" aria-label="anchor" href="#xgboost"></a>
@@ -225,7 +227,7 @@ more details. This section provides a demo code based on the package
 <code>XGBoost</code>.</p>
 <p>XGBoost requires a specific type of input data, which can be run by
 the following code</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mydata</span><span class="op">&lt;-</span><span class="va">pheno_used</span>
 
 <span class="co"># variable names</span>
@@ -241,7 +243,7 @@ the following code</p>
 <span class="va">features_train</span> <span class="op">&lt;-</span> <span class="fu">vtreat</span><span class="fu">::</span><span class="fu"><a href="https://winvector.github.io/vtreat/reference/prepare.html" class="external-link">prepare</a></span><span class="op">(</span><span class="va">treatplan</span>, <span class="va">mydata</span>, varRestriction <span class="op">=</span> <span class="va">new_vars</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">response_train</span> <span class="op">&lt;-</span> <span class="va">mydata</span><span class="op">$</span><span class="va">MHHTN</span></code></pre></div>
 <p>Tune the number of trees that minimizes the erro</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">xgb.fit1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.cv.html" class="external-link">xgb.cv</a></span><span class="op">(</span>
   data <span class="op">=</span> <span class="va">features_train</span>,
   label <span class="op">=</span> <span class="va">response_train</span>,
@@ -260,7 +262,7 @@ the following code</p>
     rmse.test   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">test_logloss_mean</span><span class="op">)</span>,
   <span class="op">)</span></code></pre></div>
 <p>Run the final trained model to obtain the predicted agent</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#final estimate</span>
 <span class="va">xgb.fit.final</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html" class="external-link">xgboost</a></span><span class="op">(</span>
   data <span class="op">=</span> <span class="va">features_train</span>,
@@ -284,7 +286,7 @@ value. For evaluation purpose, we need to create a training data and
 testing data. The training data is used for data fitting, whereas the
 testing data is used for prediction evaluation. Below, we consider 90%
 of data for training and 10% of data for testing.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span>
 <span class="va">sample.ind</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pheno_used</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">0.9</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pheno_used</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co">#id used for training</span>
 <span class="va">pheno_used_training</span><span class="op">&lt;-</span><span class="va">pheno_used</span><span class="op">[</span><span class="va">sample.ind</span>,<span class="op">]</span>
@@ -301,7 +303,7 @@ agent imputation, we can move forward to the stage of network learning,
 which is illustrated in <a href="https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial%202.html">Tutorial
 2</a>. Before the end of this tutorial, let us create a phenotypical
 data consisting of the imputed agent for the use in next tutorial.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pheno_subject_id</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substring</a></span><span class="op">(</span><span class="va">pheno_raw</span><span class="op">$</span><span class="va">SUBJID</span>,<span class="fl">6</span>,<span class="fl">10</span><span class="op">)</span>
 <span class="va">pheno_together</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">pheno_subject_id</span>,<span class="va">rate</span>,<span class="va">pheno_used</span><span class="op">$</span><span class="va">MHSMKSTS</span>,<span class="va">pheno_used</span><span class="op">$</span><span class="va">SEX</span>,<span class="va">pheno_used</span><span class="op">$</span><span class="va">HGHT</span>,<span class="va">pheno_used</span><span class="op">$</span><span class="va">BMI</span>,<span class="va">pheno_used</span><span class="op">$</span><span class="va">MHHTN</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">pheno_together</span><span class="op">)</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>,<span class="st">"rate"</span>,<span class="st">"smoke"</span>,<span class="st">"sex"</span>,<span class="st">"height"</span>,<span class="st">"bmi"</span>,<span class="st">"hyper"</span><span class="op">)</span>
@@ -313,7 +315,7 @@ data consisting of the imputed agent for the use in next tutorial.</p>
 <span class="co">## 4 111VG 0.890841096353928     0   0     69 29.53     0</span>
 <span class="co">## 5 111YS 0.946066339003859     1   0     72 30.78     1</span>
 <span class="co">## 6 1122O 0.694087589148978     1   1     66 32.76     1</span></code></pre>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">pheno_together</span>,<span class="st">"pheno_together.csv"</span>,row.names <span class="op">=</span><span class="cn">F</span><span class="op">)</span></code></pre></div>
 <p>This is the end of the Tutorial 1, please visit <a href="https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial2.html">Tutorial
 2</a> for the next step of network learning</p>
