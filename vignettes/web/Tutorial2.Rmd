@@ -187,7 +187,7 @@ base.output<-readRDSFromWeb("https://github.com/chencxxy28/DRDNetPro/raw/main/vi
 
 # Train the network model
 With base matrices, it is ready to learn the network by the function `network.learn`
-```{r,message=FALSE}
+```{r,message=FALSE,eval=FALSE}
 X_big<-base.output$X_big
 X_big_cov<-base.output$X_big_cov
 X_big_int<-base.output$X_big_int
