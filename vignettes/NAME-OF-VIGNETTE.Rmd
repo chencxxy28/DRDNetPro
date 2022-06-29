@@ -30,11 +30,20 @@ devtools::install_github("chencxxy28/DRDNetPro")
 
 To run the following tutorial, the user need to install the packages listed below
 ```{r,message=FALSE,eval=FALSE}
+library(DRDNetPro)
 library(pROC)
+library(ranger) #optional 
+library(xgboost) #optional
+library(dplyr) #optional
+library(np)
+library(splines2)
+library(grpreg)
+library(Matrix)
 library(igraph)
+library(ggplot2)
 ```
 
-The overall goal for this tutorial is to learn and visualize the recovering disease risk-associated pseudo-dynamic networks, which will be illustrated in details in the following three tutorials. The user is highly recommended to go through it one by one.
+The overall goal for this tutorial is to provide detailed codes with one data application to learn and visualize **the hypertension risk-associated pseudo-dynamic gene-gene networks in the tissue of blood vessel**, which will be illustrated in details in the following three tutorials. The user is highly recommended to go through it one by one.
 
 # Predict the agent
 This section includes the content of preparing data, building the prediction model for the agent, and evaluating the model for the predicted agent. This agent is related to certain disease risk of interest (risk of having hypertension) and can be used to construct pseudo-dynamic networks. Please find the details in [Tutorial 1](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial1.html)
