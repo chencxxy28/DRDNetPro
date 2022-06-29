@@ -1,9 +1,9 @@
 ---
-title: "Tutorial 3: Visualize the results  "
+title: "Tutorial 3: Visualize the results"
 author: "Chixiang Chen"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{DRDNetPro}
+  %\VignetteIndexEntry{Tutorial 3: Visualize the results}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,13 +13,13 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = '/Users/chixiang.chen/OneDrive - University of Maryland School of Medicine/phd_in_psu/research/Prof._Wu/Network/tissue/blood_vessel/')
 ```
 
-**DRDNetPro** is a statistical learning algorithm for recovering disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the third step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). 
+**DRDNetPro** is a bio-protocol for recovering disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model of having certain disease, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks. This tutorial will provide detailed information for the third step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). 
 
-If the user hasn't gone through the Tutorial 1, please visit [Tutorial 2](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial2.html) for the second step of training the network model. 
+This tutorial provides some demo codes to visualize the results from network learning in Tutorial 2. If the user hasn't gone through the Tutorial 2, please visit [Tutorial 2](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial2.html) for the second step of training the network model. 
 
 To begin with, load the following packages
 
-```{r}
+```{r,message=FALSE}
 library(igraph)
 library(ggplot2)
 readRDSFromWeb <- function(ref) {
@@ -27,7 +27,7 @@ readRDSFromWeb <- function(ref) {
 }
 ```
 
-# Load the output data from the network learing in [Tutorial 2](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial2.html).
+# Load the output data of the network learing from Tutorial 2.
 
 The data we need to use in this tutorial is [network.output](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/network.output.rds), [data.list.t3](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data.list.t3.rds), and [85_gene_name_information](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/85_gene_name_information.csv)
 ```{r,message=FALSE}
@@ -37,7 +37,7 @@ data.list.t3<-readRDSFromWeb("https://github.com/chencxxy28/DRDNetPro/raw/main/v
 gene_exact_names<-read.csv("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/85_gene_name_information.csv")
 ```
 
-Extract detailed data about gene expression data, covariate vector, imputed agent, self-node size for baseline, self-node size for covariate effect, overall self-node size, gene interaction effects from the baseline, gene interaction effects from the covariate, and overall gene interaction effects.
+Extract detailed data about the gene expression, covariate vector, imputed agent, self-node size for baseline, self-node size for covariate effect, overall self-node size, gene interaction effects from the baseline, gene interaction effects from the covariate, overall gene interaction effects, smoking effect, trend effect for baseline, trend effect from covariate.
 ```{r,message=FALSE}
 data_observe<-data.list.t3$data_observe
 x_cov<-data.list.t3$x_cov
@@ -58,8 +58,8 @@ trend_smoking_effect_all<-network.output$trend_smoking_effect_all
 
 
 # Visualize the pseudo dynamic network given an agent value
-## Visualize the baseline network when the agent (disease risk) becomes high
-To visualize the pseudo dynamic network given an agent value, a useful tool is `igraph` package. It allows the self-designed network structure. More detailed tutorial about igraph can be found in [igraph](https://kateto.net/networks-r-igraph). The following is a demo code for visualizing the recovered baseline network, where the disease risk is changing from 0 (no risk) to 0.86 (high risk). 
+## Visualize the baseline network when the agent (risk of having hypertension) becomes high
+To visualize the pseudo dynamic network given an agent (disease risk) value, a useful tool is the `igraph` package. It allows the self-designed network structure. More detailed tutorial about igraph can be found in [igraph](https://kateto.net/networks-r-igraph). The following is a demo code for visualizing the recovered baseline network for non-smoking group, where the agent (risk of having hypertension) is changing from 0 (no risk) to 0.86 (high risk). 
 ```{r,message=FALSE}
 ##network for x=0 at i=250 after some tuning
 par(mfrow = c(1, 1))
@@ -140,8 +140,8 @@ for (i in c(250))
 }
 ```
 
-## Visualize the covariate-effect (smoking) networks when the agent (disease risk) becomes low, moderate, and high.
-The following is a demo code for visualizing three recovered covariate-effect networks, where the disease risk is changing from 0 (no risk) to 0.10 (low risk), from 0 (no risk) to 0.42 (moderate risk), and from 0 (no risk) to 0.86 (high risk). 
+## Visualize three covariate-effect (smoking) networks when the agent (risk of having hypertension) becomes low, moderate, and high, respectively.
+The following is a demo code for visualizing three recovered covariate-effect (effect caused by smoking) networks, where the agent (risk of having hypertension) is changing from 0 (no risk) to 0.10 (low risk), from 0 (no risk) to 0.42 (moderate risk), and from 0 (no risk) to 0.86 (high risk). 
 
 ```{r,message=FALSE}
 {par(mfrow = c(1, 3))
@@ -220,24 +220,26 @@ for (i in c(10,100,250))
 ```
 
 
-# Visualize the interaction behavors from other genes to the gene of interest over the spectrum of the agent (disease risk)
-
+# Visualize the interaction behavors from other genes to the gene of interest over the spectrum of the agent (risk of having hypertension)
 ## For the baseline group (non-smoking group)
+
+Select the gene of interest (C3orf70) and extract related results 
 ```{r,message=FALSE}
 #select a gene: C3orf70
 index.gene<-which(gene_exact_names$gene.name=="C3orf70")
 
 #extract information about the target gene and affecting genes
-gene_61_data<-gene_whole[gene_whole[,2]==index.gene,][,-c(1,2)]
+gene_select_data<-gene_whole[gene_whole[,2]==index.gene,][,-c(1,2)]
 affecting_genes<-gene_whole[gene_whole[,2]==index.gene,][,1]
-magnitude<-apply(gene_61_data,1,function (x) mean(abs(x)))
+magnitude<-apply(gene_select_data,1,function (x) mean(abs(x)))
 
-gene_61_data_tuned<-gene_61_data[magnitude>=0.02,]
+gene_select_data_tuned<-gene_select_data[magnitude>=0.02,]
 affecting_genes_tuned<-affecting_genes[magnitude>=0.02]
 name_affectgene<-gene_exact_names$gene.name[affecting_genes_tuned]
+```
 
-smoking_effect_all[index.gene]
-
+Plot the trend effect for the non-smoking group as the agent increases (risk of having hypertension). It can be seen that there is a decreasing trend of expression.
+```{r,message=FALSE}
 #plot trend effect
 trend_data<-as.data.frame(cbind(trend_base_all[,index.gene],agent))
 colnames(trend_data)<-c("trend_effect","hypertension_probability")
@@ -245,87 +247,79 @@ trend_data$line<-"trend_effect"
 head(trend_data)
 p1 <- ggplot(trend_data, aes(x=hypertension_probability, y=trend_effect)) +
   geom_line(colour = "darkblue",size=1) +geom_hline(yintercept=0, linetype="dashed", color = "black")+
-  labs(title="Linear trend effect for the gene C3orf70", x="Hypertension_probability", y="Trend effect")
+  labs(title="Linear trend effect for the gene C3orf70", x="Risk of having Hypertension", y="Trend effect")
 p1
 ```
 
+Plot the interaction effects from genes to the targeted gene for the non-smoking group as the agent increases (risk of having hypertension). It can be seen that three genes are inhibiting the expression of the gene C3orf70 
 ```{r,message=FALSE}
 #plot interaction effects
-gene_61_data_tuned_new<-c(t(gene_61_data_tuned))
-gene_61_data_tuned_new<-cbind(gene_61_data_tuned_new,rep(agent,time=3))
-colnames(gene_61_data_tuned_new)<-c("effects","hypertension_probability")
-gene_61_data_tuned_new<-as.data.frame(gene_61_data_tuned_new)
-gene_61_data_tuned_new$genes<-rep(name_affectgene,each=length(agent))
+gene_select_data_tuned_new<-c(t(gene_select_data_tuned))
+gene_select_data_tuned_new<-cbind(gene_select_data_tuned_new,rep(agent,time=3))
+colnames(gene_select_data_tuned_new)<-c("effects","hypertension_probability")
+gene_select_data_tuned_new<-as.data.frame(gene_select_data_tuned_new)
+gene_select_data_tuned_new$genes<-rep(name_affectgene,each=length(agent))
 
-p2 <- ggplot(gene_61_data_tuned_new, aes(x=hypertension_probability, y=effects, color=genes)) +
+p2 <- ggplot(gene_select_data_tuned_new, aes(x=hypertension_probability, y=effects, color=genes)) +
   geom_point(size=1,alpha=rep(c(1,1,1),each=length(agent)))+scale_color_manual(values=c("red", "blue","green")) +geom_hline(yintercept=0, linetype="dashed", color = "black")+
-  labs(title="Inter-behaviors to the gene C3orf70", x="Hypertension_risk", y="Effects from other genes")
+  labs(title="Inter-behaviors to the gene C3orf70", x="Risk of having Hypertension", y="Effects from other genes")
 
 p2
 ```
 
 
+## For the smoking group 
+
+Select the gene of interest (C3orf70) and extract related results. It can be seen that the effect from smoking is -0.13. 
+```{r,message=FALSE}
+#for smoking group
+gene_select_data<-gene_whole_all[gene_whole_all[,2]==index.gene,][,-c(1,2)]
+affecting_genes<-gene_whole_all[gene_whole_all[,2]==index.gene,][,1]
+magnitude<-apply(gene_select_data,1,function (x) mean(abs(x)))
+
+gene_select_data_tuned<-gene_select_data[magnitude>=0.02,]
+affecting_genes_tuned<-affecting_genes[magnitude>=0.02]
+name_affectgene<-gene_exact_names$gene.name[affecting_genes_tuned]
+
+smoking_effect_all[index.gene]
+```
 
 
+The above value indicates that smoking will inhibit the expression of gene C3orf70. Plot the trend effect for the smoking group as the agent increases (risk of having hypertension). It can be seen that there is a decreasing trend of expression.
+```{r,message=FALSE}
+#par(mfrow = c(2, 3))
+#dim(gene_61_data_tuned)
+smoking_effect_size<-trend_smoking_effect_all[,index.gene]+smoking_effect_all[index.gene]+trend_base_all[,index.gene]
 
+trend_data<-as.data.frame(cbind(smoking_effect_size,agent))
+colnames(trend_data)<-c("trend_effect","hypertension_probability")
+trend_data$line<-"trend_effect"
+head(trend_data)
+#y_limit<-max(trend_data$trend_effect)
+p3 <- ggplot(trend_data, aes(x=hypertension_probability, y=trend_effect)) +
+  geom_line(colour = "darkblue",size=1) +
+  #coord_cartesian(ylim=c(0,y_limit ))+
+  geom_hline(yintercept=0, linetype="dashed", color = "black")+
+  labs(title="Linear trend effect for the gene TSPO", x="Risk of having hypertension", y="Trend effect")
 
-<!-- update later -->
-  <!-- ```{r,message=FALSE} -->
-  <!-- #for smoking group -->
-  <!-- gene_61_data<-gene_whole_all[gene_whole_all[,2]==61,][,-c(1,2)] -->
-  <!-- affecting_genes<-gene_whole_all[gene_whole_all[,2]==61,][,1] -->
-  <!-- magnitude<-apply(gene_61_data,1,function (x) mean(abs(x))) -->
-  <!-- gene_61_data_tuned<-gene_61_data[magnitude>=0.02,] -->
-  <!-- affecting_genes_tuned<-affecting_genes[magnitude>=0.02] -->
-  
-  <!-- #par(mfrow = c(2, 3)) -->
-  <!-- #dim(gene_61_data_tuned) -->
-  <!-- smoking_effect_size<-trend_smoking_effect_all[,61]+smoking_effect_all[61]+trend_base_all[,61] -->
-  <!-- #plot(y=smoking_effect_size,x=t,ylim = c(0,max(smoking_effect_size))) -->
-  <!-- #abline(h=0) -->
-  <!-- #for(i in 1:nrow(gene_61_data_tuned)) -->
-  <!-- #{ -->
-  <!-- #  plot(x=t,y=gene_61_data_tuned[i,]) -->
-  <!-- #  abline(h=0) -->
-  <!-- #} -->
-  <!-- trend_data<-as.data.frame(cbind(smoking_effect_size,t)) -->
-  <!-- colnames(trend_data)<-c("trend_effect","hypertension_probability") -->
-  <!-- trend_data$line<-"trend_effect" -->
-  <!-- head(trend_data) -->
-  <!-- y_limit<-max(trend_data$trend_effect) -->
-  <!-- p3 <- ggplot(trend_data, aes(x=hypertension_probability, y=trend_effect)) + -->
-  <!--   geom_line(colour = "darkblue",size=1) +coord_cartesian(ylim=c(0,y_limit ))+geom_hline(yintercept=0, linetype="dashed", color = "black")+ -->
-  <!--   labs(title="Linear trend effect for the gene TSPO", x="Hypertension_probability", y="Trend effect") -->
-  
-  <!-- p3 -->
-  
-  <!-- gene_61_data_tuned_new<-c(gene_61_data_tuned[1,],gene_61_data_tuned[2,],gene_61_data_tuned[3,],gene_61_data_tuned[4,],gene_61_data_tuned[5,]) -->
-  <!-- gene_61_data_tuned_new<-cbind(gene_61_data_tuned_new,rep(t,time=5)) -->
-  <!-- colnames(gene_61_data_tuned_new)<-c("effects","hypertension_probability") -->
-  <!-- gene_61_data_tuned_new<-as.data.frame(gene_61_data_tuned_new) -->
-  <!-- gene_61_data_tuned_new$genes<-(rep(c("NTN1","RCN3","MEIS3P1","C3orf70","ANGPTL1"),each=length(t))) -->
-  <!-- head(gene_61_data_tuned_new) -->
-  <!-- p4 <- ggplot(gene_61_data_tuned_new, aes(x=hypertension_probability, y=effects, color=genes, group=genes)) + -->
-  <!--   geom_point(alpha=rep(c(1,1,rep(0.1,3)),each=length(t)))+scale_color_manual(values=c("purple", "green","yellow","red","blue")) +geom_hline(yintercept=0, linetype="dashed", color = "black")+ -->
-  <!--   labs(title="Inter-behaviors to the gene TSPO", x="Hypertension probability", y="Effects from other genes") -->
-  
-  <!-- p4 -->
-  
-  <!-- multiplot(p3, p4, cols=2) -->
-  <!-- multiplot(p1,p3, p2,p4, cols=2) -->
-  
-  <!-- # Multiple plot function -->
-  <!-- # -->
-  <!-- # ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects) -->
-  <!-- # - cols:   Number of columns in layout -->
-  <!-- # - layout: A matrix specifying the layout. If present, 'cols' is ignored. -->
-  <!-- # -->
-  <!-- # If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE), -->
-  <!-- # then plot 1 will go in the upper left, 2 will go in the upper right, and -->
-  <!-- # 3 will go all the way across the bottom. -->
-  <!-- # -->
-  
-  <!-- ``` -->
+p3
+```
+
+Plot the interaction effects from genes to the targeted gene for the smoking group as the agent increases (risk of having hypertension). It can be seen, in addition to the three genes detected in non-smoking group, one extra gene is affecting the expression of the gene C3orf70. However, it seems that the effect from CTSD is small and wiggles around zero. 
+```{r,message=FALSE}
+gene_select_data_tuned_new<-c(t(gene_select_data_tuned))
+gene_select_data_tuned_new<-cbind(gene_select_data_tuned_new,rep(agent,time=4))
+colnames(gene_select_data_tuned_new)<-c("effects","hypertension_probability")
+
+gene_select_data_tuned_new<-as.data.frame(gene_select_data_tuned_new)
+gene_select_data_tuned_new$genes<-rep(name_affectgene,each=length(agent))
+
+p4 <- ggplot(gene_select_data_tuned_new, aes(x=hypertension_probability, y=effects, color=genes, group=genes)) +
+  geom_point(size=1,alpha=rep(c(1,1,1,1),each=length(agent)))+scale_color_manual(values=c("purple", "green","yellow","red","blue")) +geom_hline(yintercept=0, linetype="dashed", color = "black")+
+  labs(title="Inter-behaviors to the gene TSPO", x="Risk of having hypertension", y="Effects from other genes")
+
+p4
+```
   
   
   
