@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tutorial 2: Train the network model   • DRDNetPro</title>
+<title>Tutorial 2: Train the network model • DRDNetPro</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../../bootstrap-toc.css">
 <script src="../../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../../pkgdown.css" rel="stylesheet">
-<script src="../../pkgdown.js"></script><meta property="og:title" content="Tutorial 2: Train the network model  ">
+<script src="../../pkgdown.js"></script><meta property="og:title" content="Tutorial 2: Train the network model">
 <meta property="og:description" content="DRDNetPro">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -105,28 +105,26 @@ Chen</h4>
 
     
     
-<p><strong>DRDNetPro</strong> is a statistical learning algorithm for
-recovering disease risk-associated pseudo-dynamic networks (DRDNet) from
-steady-state data. It incorporates risk prediction model, a varying
-coefficient model, multiple ordinary differential equations, and group
-lasso estimation to learn a series of networks.This tutorial will
+<p><strong>DRDNetPro</strong> is a bio-protocol for recovering disease
+risk-associated pseudo-dynamic networks (DRDNet) from steady-state data.
+It incorporates risk prediction model of having certain disease, a
+varying coefficient model, multiple ordinary differential equations, and
+group lasso estimation to learn a series of networks. This tutorial will
 provide detailed information for the second step of implementing the <a href="https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533" class="external-link">DRDNet</a>.
 The data that are involved in this tutorial are [pheno_together],
 [data_vessel], [data_vessel_processed], [index_utilized], [data.vcfit],
 [base.output], [network.output].</p>
-<p>If the user hasn’t gone through the Tutorial 1, please visit <a href="https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial1.html">Tutorial
+<p>This tutorial provides main codes to learn the pesudo-dynamic
+networks based on the imputed agent (risk of having hypertension) in
+Tutorial 1. If the user hasn’t gone through the Tutorial 1, please visit
+<a href="https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial1.html">Tutorial
 1</a> for the first step of predicting the agent.</p>
 <p>The followings are necessary packages we need to train the
 network.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/chencxxy28/DRDNetPro" class="external-link">DRDNetPro</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JeffreyRacine/R-Package-np" class="external-link">np</a></span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Nonparametric Kernel Methods for Mixed Datatypes (version 0.60-11)</span>
-<span class="co">## [vignette("np_faq",package="np") provides answers to frequently asked questions]</span>
-<span class="co">## [vignette("np",package="np") an overview]</span>
-<span class="co">## [vignette("entropy_np",package="np") an overview of entropy-based methods]</span></code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wwenjie.org/splines2" class="external-link">splines2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JeffreyRacine/R-Package-np" class="external-link">np</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wwenjie.org/splines2" class="external-link">splines2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pbreheny.github.io/grpreg/" class="external-link">grpreg</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://Matrix.R-forge.R-project.org/" class="external-link">Matrix</a></span><span class="op">)</span>
 <span class="va">readRDSFromWeb</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ref</span><span class="op">)</span> <span class="op">{</span>
@@ -143,50 +141,50 @@ gene expression preprocess and gene selection.</p>
 </h2>
 <p>First, read the data <a href="https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_together.csv" class="external-link">pheno_together</a>
 and <a href="https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data_vessel.csv" class="external-link">data_vessel</a>.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#read the data</span>
 <span class="va">pheno_together</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_together.csv"</span><span class="op">)</span> <span class="co"># phenotype data</span>
 <span class="va">data_vessel</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data_vessel.csv"</span><span class="op">)</span> <span class="co"># gene expression data</span></code></pre></div>
 <p>Select genes with positive expressions and do log transformation.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span><span class="op">&lt;-</span><span class="va">data_vessel</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>
 <span class="va">data_vessel</span><span class="op">&lt;-</span><span class="va">data_vessel</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] 56202   299</span></code></pre>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#delete gene with all zeros</span>
 <span class="va">row_mean</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">data_vessel</span>,<span class="fl">1</span>, <span class="va">mean</span><span class="op">)</span>
 <span class="va">data_vessel</span><span class="op">&lt;-</span><span class="va">data_vessel</span><span class="op">[</span><span class="va">row_mean</span><span class="op">&gt;</span><span class="fl">0</span>,<span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] 51925   299</span></code></pre>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#let the gene expression equal to zero if it's less than 1 level:</span>
 <span class="va">data_vessel</span><span class="op">[</span><span class="va">data_vessel</span><span class="op">&lt;=</span><span class="fl">1</span><span class="op">]</span><span class="op">&lt;-</span><span class="fl">0</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] 51925   299</span></code></pre>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">&lt;=</span><span class="fl">1</span> <span class="op">&amp;</span> <span class="va">data_vessel</span><span class="op">&gt;</span><span class="fl">0</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## integer(0)</span></code></pre>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#count zeros in each row:</span>
 <span class="va">zero_row</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">data_vessel</span>,<span class="fl">1</span>,<span class="kw">function</span> <span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">x</span><span class="op">==</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">zero_row</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
 <span class="co">##     0.0    10.0   297.0   203.3   299.0   299.0</span></code></pre>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#do log transformation</span>
 <span class="va">data_vessel</span><span class="op">[</span><span class="va">data_vessel</span><span class="op">!=</span><span class="fl">0</span><span class="op">]</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">[</span><span class="va">data_vessel</span><span class="op">!=</span><span class="fl">0</span><span class="op">]</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] 51925   299</span></code></pre>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#set threshold about zeros:</span>
 <span class="va">data_vessel</span><span class="op">&lt;-</span><span class="va">data_vessel</span><span class="op">[</span><span class="va">zero_row</span><span class="op">&lt;=</span><span class="fl">0</span>,<span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] 11466   299</span></code></pre>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">data_vessel</span>,<span class="st">"data_vessel_processed.csv"</span>,row.names <span class="op">=</span><span class="cn">F</span><span class="op">)</span></code></pre></div>
 <p>The reprocessed data can be directly loaded by</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_vessel</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data_vessel_processed.csv"</span><span class="op">)</span> <span class="co"># read preprocessed gene expression data</span></code></pre></div>
 </div>
 <div class="section level2">
@@ -194,7 +192,7 @@ and <a href="https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/dat
 </h2>
 <p>After gene expression preprocessing, the user should conduct gene
 selection. First, create the data for screening</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vessel_subject_id</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substring</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span>,<span class="fl">6</span>,<span class="fl">10</span><span class="op">)</span>
 <span class="va">vessel_subject_id</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substring</a></span><span class="op">(</span><span class="va">vessel_subject_id</span>,<span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span><span class="op">==</span><span class="st">"."</span>,<span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substring</a></span><span class="op">(</span><span class="va">vessel_subject_id</span>,<span class="fl">1</span>,<span class="fl">4</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substring</a></span><span class="op">(</span><span class="va">vessel_subject_id</span>,<span class="fl">1</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span>
 
@@ -208,7 +206,7 @@ Spearson correlation. The screening process should be done separately in
 group. Run the function <code>test_screen</code> to conduct the
 hypothesis testing. Then combine the genes selected by both screening
 and testing.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#screening for smoking group</span>
 <span class="va">data_vessel_smoker</span><span class="op">&lt;-</span><span class="va">data_vessel</span><span class="op">[</span>,<span class="va">index_data</span><span class="op">$</span><span class="va">smoke</span><span class="op">==</span><span class="fl">1</span><span class="op">]</span>
 <span class="va">index_data_smoker</span><span class="op">&lt;-</span><span class="va">index_data</span><span class="op">[</span><span class="va">index_data</span><span class="op">$</span><span class="va">smoke</span><span class="op">==</span><span class="fl">1</span>,<span class="op">]</span>
@@ -233,12 +231,12 @@ and testing.</p>
 <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">sig_all_index</span><span class="op">)</span></code></pre></div>
 <p>The selected genes can be also directly accessed by running the
 code</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">index_utilized</span><span class="op">&lt;-</span><span class="fu">readRDSFromWeb</span><span class="op">(</span> <span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/index_utilized.rds"</span><span class="op">)</span></code></pre></div>
 <p>There are 85 genes selected. Finally, construct the data for the
 following network learning. These data are ordered in terms of imputed
 agent</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">index</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">index_data</span><span class="op">$</span><span class="va">rate</span>,ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="va">data_vessel_order</span><span class="op">&lt;-</span><span class="va">data_vessel</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">index</span><span class="op">)</span><span class="op">]</span> <span class="co">#order the gene matrix based on the order of the agent</span>
 <span class="va">x_original</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">data_vessel_order</span><span class="op">)</span>
@@ -253,22 +251,22 @@ agent</p>
 <p>Before constructing the network, each selected gene should be fitted
 by varying coefficient model. Run the following code to delete samples
 that are too close to each other in terms of agent values.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#further refine the data by deleting the data with agent too close to each other, this step is highly recommended in practice. Here we set the threshod=0.0001</span>
 <span class="va">data_observe</span><span class="op">&lt;-</span><span class="va">data_observe</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">agent</span>,lag<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">&gt;=</span><span class="fl">0.0001</span>,<span class="op">]</span>
 <span class="va">x_cov</span><span class="op">&lt;-</span><span class="va">smk_cov</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">agent</span>,lag<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">&gt;=</span><span class="fl">0.0001</span><span class="op">]</span>
 <span class="va">agent</span><span class="op">&lt;-</span><span class="va">agent</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">agent</span>,lag<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">&gt;=</span><span class="fl">0.0001</span><span class="op">]</span></code></pre></div>
 <p>Run the function <code>vc.fit</code> to fit the varying coefficient
 model with smoking as the covariate.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">4351</span><span class="op">)</span>
 <span class="va">data.vcfit</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/vc.fit.html">vc.fit</a></span><span class="op">(</span>agent<span class="op">=</span><span class="va">agent</span>,data_observe<span class="op">=</span><span class="va">data_observe</span>,x_cov<span class="op">=</span><span class="va">x_cov</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">data.vcfit</span>, file <span class="op">=</span> <span class="st">"data.vcfit.rds"</span><span class="op">)</span></code></pre></div>
 <p>The users can also directly load the fitted model</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data.vcfit</span><span class="op">&lt;-</span><span class="fu">readRDSFromWeb</span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data.vcfit.rds"</span><span class="op">)</span></code></pre></div>
 <p>Run the following codes to visualize the fitting curves</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">id_sub</span><span class="op">&lt;-</span><span class="fl">8</span>
 <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#for smoking group</span>
@@ -287,7 +285,7 @@ model with smoking as the covariate.</p>
 non-parametric manner. Run the function <code>base.construct</code> to
 construct the base matrix for the varying intercept and base matrix for
 the varying coefficient of smoking</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_fitted</span><span class="op">&lt;-</span><span class="va">data.vcfit</span><span class="op">$</span><span class="va">data_fitted</span>
 <span class="va">data_fitted_cov</span><span class="op">&lt;-</span><span class="va">data.vcfit</span><span class="op">$</span><span class="va">data_fitted_cov</span>
 
@@ -299,7 +297,7 @@ x_cov<span class="op">=</span><span class="va">x_cov</span><span class="op">)</s
 
 <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">base.output</span>, file <span class="op">=</span> <span class="st">"base.output.rds"</span><span class="op">)</span></code></pre></div>
 <p>The constructed base matrices can be also loaded by</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">base.output</span><span class="op">&lt;-</span><span class="fu">readRDSFromWeb</span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/base.output.rds"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level1">
@@ -307,7 +305,7 @@ x_cov<span class="op">=</span><span class="va">x_cov</span><span class="op">)</s
 </h1>
 <p>With base matrices, it is ready to learn the network by the function
 <code>network.learn</code></p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">X_big</span><span class="op">&lt;-</span><span class="va">base.output</span><span class="op">$</span><span class="va">X_big</span>
 <span class="va">X_big_cov</span><span class="op">&lt;-</span><span class="va">base.output</span><span class="op">$</span><span class="va">X_big_cov</span>
 <span class="va">X_big_int</span><span class="op">&lt;-</span><span class="va">base.output</span><span class="op">$</span><span class="va">X_big_int</span>
@@ -331,7 +329,7 @@ x_cov<span class="op">=</span><span class="va">x_cov</span><span class="op">)</s
 <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">network.output</span>, file <span class="op">=</span> <span class="st">"network.output.rds"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">data.list.t3</span>, file <span class="op">=</span> <span class="st">"data.list.t3.rds"</span><span class="op">)</span></code></pre></div>
 <p>The results from network learning can be also loaded by</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">network.output</span><span class="op">&lt;-</span><span class="fu">readRDSFromWeb</span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/network.output.rds"</span><span class="op">)</span></code></pre></div>
 <p>This is the end of the Tutorial 2, please visit <a href="https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial3.html">Tutorial
 3</a> for the next step of visualizing the results.</p>
