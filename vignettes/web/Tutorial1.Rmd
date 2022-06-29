@@ -62,13 +62,14 @@ summary(rate)
 Random forest is an ensemble of decision trees. It builds and combines multiple decision trees to get more accurate predictions. It’s a non-linear classification algorithm. Each decision tree model is used when employed on its own. An error estimate of cases is made that is not used when constructing the tree. This is called an out of bag error estimate mentioned as a percentage. There are several R packages available: one is `randomForest`, and one is `ranger`. Please refer to [random forest](http://www.css.cornell.edu/faculty/dgr2/_static/files/R_html/CompareRandomForestPackages.html#2_Random_forest_with_randomForest) for more details. This section provides a demo code based on the package `ranger`.
 
 Create the data for `ranger`, the outcome should be a factor.
-```{r,message=FALSE,eval=FALSE}
+```{r,message=FALSE}
 mydata<-pheno_used
 mydata$MHHTN<-as.factor(mydata$MHHTN)
 ```
 
 Run the following code to train the model. Note that some parameters, such as the number of variables, can be further tuned. Please refer [random forest](http://www.css.cornell.edu/faculty/dgr2/_static/files/R_html/CompareRandomForestPackages.html#2_Random_forest_with_randomForest) for more information.
-```{r,message=FALSE,eval=FALSE}
+```{r,message=FALSE}
+set.seed(12345)
 rf<-ranger(MHHTN~., num.trees=1000,data=mydata,replace=T,write.forest = T,probability = T)
 rate.rf<-predict(rf, mydata)$predictions[,2]
 summary(rate.rf)
@@ -81,7 +82,7 @@ includes efficient linear model solver and tree learning algorithms, and support
 
 XGBoost requires a specific type of input data, which can be run by the following code
 
-```{r,message=FALSE,eval=FALSE}
+```{r,message=FALSE}
 mydata<-pheno_used
 
 # variable names
@@ -98,8 +99,9 @@ features_train <- vtreat::prepare(treatplan, mydata, varRestriction = new_vars) 
 response_train <- mydata$MHHTN
 ```
 
-Tune the number of trees that minimizes the erro
-```{r,message=FALSE,eval=FALSE}
+Tune the number of trees that minimizes the error
+```{r,message=FALSE}
+set.seed(12345)
 xgb.fit1 <- xgb.cv(
   data = features_train,
   label = response_train,
@@ -120,7 +122,8 @@ vect=xgb.fit1$evaluation_log %>%
 ```
 
 Run the final trained model to obtain the predicted agent
-```{r,message=FALSE,eval=FALSE}
+```{r,message=FALSE}
+set.seed(12345)
 #final estimate
 xgb.fit.final <- xgboost(
   data = features_train,
