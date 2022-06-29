@@ -340,7 +340,10 @@ network.learn<-function(data_observe=data_observe,
               self_size_all=self_size_all,
               gene_whole_cov=gene_whole_cov,
               gene_whole_all=gene_whole_all,
-              gene_whole=gene_whole))
+              gene_whole=gene_whole,
+              smoking_effect_all=smoking_effect_all,
+              trend_base_all=trend_base_all,
+              trend_smoking_effect_all=trend_smoking_effect_all))
 }
 
 
