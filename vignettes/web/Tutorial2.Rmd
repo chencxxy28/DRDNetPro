@@ -10,7 +10,7 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_knit$set(root.dir = '/Users/chixiang.chen/OneDrive - University of Maryland School of Medicine/phd_in_psu/research/Prof._Wu/Network/tissue/blood_vessel/')
+knitr::opts_knit$set(root.dir = '/Users/chixiang.chen/Library/CloudStorage/OneDrive-UniversityofMarylandSchoolofMedicine/packages/DRDNetPro/vignettes/data')
 ```
 
 **DRDNetPro** is a statistical learning algorithm for recovering disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the second step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). The data that are involved in this tutorial are [pheno_together], [data_vessel], [data_vessel_processed], [index_utilized], [data.vcfit], [base.output], [network.output]. 
@@ -187,7 +187,7 @@ base.output<-readRDSFromWeb("https://github.com/chencxxy28/DRDNetPro/raw/main/vi
 
 # Train the network model
 With base matrices, it is ready to learn the network by the function `network.learn`
-```{r,message=FALSE,eval=FALSE}
+```{r,message=FALSE}
 X_big<-base.output$X_big
 X_big_cov<-base.output$X_big_cov
 X_big_int<-base.output$X_big_int
