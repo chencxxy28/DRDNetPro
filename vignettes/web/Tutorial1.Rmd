@@ -1,9 +1,9 @@
 ---
-title: "Tutorial 1: predict the agent "
+title: "Tutorial 1: predict the agent"
 author: "Chixiang Chen"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{DRDNetPro}
+  %\VignetteIndexEntry{Tutorial 1: predict the agent}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = '/Users/chixiang.chen/OneDrive - University of Maryland School of Medicine/phd_in_psu/research/Prof._Wu/Network/tissue/blood_vessel/')
 ```
 
-**DRDNetPro** is a statistical learning algorithm for recovering disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks.This tutorial will provide detailed information for the first step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). The data we will use in this tutorial is named [pheno_used](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_used.csv).
+**DRDNetPro** is a bio-protocol for recovering disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model of having certain disease, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks. This tutorial will provide detailed information for the first step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). The data we will use in this tutorial is named [pheno_used](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_used.csv).
 
 To begin with, we need to install the following packages in R
 
@@ -38,7 +38,7 @@ readRDSFromWeb <- function(ref) {
 ```
 
 # Prepare the data for training the agent
-Before predicting the agent, the users need to prepare the data for training the model. The data is required to be a matrix, which includes the outcome in the first column and all potential predictors in the remaining columns. Do not include the intercept as one column. The outcome in this protocol is in the binary scale (e.g., 0=no disease and 1=disease), which in practice indicates the disease status. All values in the matrix should be numeric. The missing data is allowed in this training process, though it is always recommended to have a complete data as an input. The following working data is from one sample of data in GTEx project and de-identified. 
+The agent in the following tutorial is related to the risk of having hypertension. Before predicting the agent, the users need to prepare the data for training the model. The data is required to be a matrix, which includes the outcome in the first column and all potential predictors in the remaining columns. Do not include the intercept as one column. The outcome in this protocol is in the binary scale (e.g., 0=no disease and 1=disease), which in practice indicates the disease status. All values in the matrix should be numeric. The missing data is allowed in this training process, though it is always recommended to have a complete data as an input. The following working data is from one sample of data in GTEx project and de-identified. 
 
 ```{r,message=FALSE}
 #read the data
@@ -49,7 +49,7 @@ head(pheno_used)
 ```
 
 # Build up the training model
-There is no unique way to predict the agent. Statistical regression models or machine learning algorithms can be applied. In our program, we allow the users to specify their own method, which includes conventional logistic regression, random forest, and XGBoost. The final imputed agent is supported between 0 and 1, which quantifies the disease risk of interest.
+There is no unique way to predict the agent (risk of having hypertension). Statistical regression models or machine learning algorithms can be applied. In our program, we allow the users to specify their own method, which includes conventional logistic regression, random forest, and XGBoost. The final imputed agent is supported between 0 and 1, which quantifies the disease risk of interest.
 
 ## logistic regression
 ```{r,message=FALSE}
