@@ -287,8 +287,7 @@ smoking_effect_all[index.gene]
 
 The above value indicates that smoking will inhibit the expression of gene C3orf70. Plot the trend effect for the smoking group as the agent increases (risk of having hypertension). It can be seen that there is a decreasing trend of expression.
 ```{r,message=FALSE}
-#par(mfrow = c(2, 3))
-#dim(gene_61_data_tuned)
+
 smoking_effect_size<-trend_smoking_effect_all[,index.gene]+smoking_effect_all[index.gene]+trend_base_all[,index.gene]
 
 trend_data<-as.data.frame(cbind(smoking_effect_size,agent))
@@ -300,7 +299,7 @@ p3 <- ggplot(trend_data, aes(x=hypertension_probability, y=trend_effect)) +
   geom_line(colour = "darkblue",size=1) +
   #coord_cartesian(ylim=c(0,y_limit ))+
   geom_hline(yintercept=0, linetype="dashed", color = "black")+
-  labs(title="Linear trend effect for the gene TSPO", x="Risk of having hypertension", y="Trend effect")
+  labs(title="Linear trend effect for the gene C3orf70", x="Risk of having hypertension", y="Trend effect")
 
 p3
 ```
@@ -316,7 +315,7 @@ gene_select_data_tuned_new$genes<-rep(name_affectgene,each=length(agent))
 
 p4 <- ggplot(gene_select_data_tuned_new, aes(x=hypertension_probability, y=effects, color=genes, group=genes)) +
   geom_point(size=1,alpha=rep(c(1,1,1,1),each=length(agent)))+scale_color_manual(values=c("purple", "green","yellow","red","blue")) +geom_hline(yintercept=0, linetype="dashed", color = "black")+
-  labs(title="Inter-behaviors to the gene TSPO", x="Risk of having hypertension", y="Effects from other genes")
+  labs(title="Inter-behaviors to the gene C3orf70", x="Risk of having hypertension", y="Effects from other genes")
 
 p4
 ```
