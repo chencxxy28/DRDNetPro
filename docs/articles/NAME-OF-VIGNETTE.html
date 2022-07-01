@@ -108,13 +108,15 @@ Chen</h4>
 <div class="figure">
 <img src="https://github.com/chencxxy28/DRDNetPro/raw/main/docs/reference/figures/Bio_protocal_paper_06252022.png" alt=""><p class="caption">DRDNetPro working flow</p>
 </div>
-<p><strong>DRDNetPro</strong> is a bio-protocol for recovering disease
-risk-associated pseudo-dynamic networks <a href="https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533" class="external-link">(DRDNet)</a>
-from steady-state data. It incorporates risk prediction model of having
-certain disease, a varying coefficient model, multiple ordinary
-differential equations, and group lasso estimation to learn a series of
-networks. This page summarizes the three main procedures to implement
-network learning.</p>
+<p><strong>DRDNetPro</strong> is a bio-protocol for recovering
+<strong>D</strong>isease <strong>R</strong>isk-associated
+pseudo-<strong>D</strong>ynamic <strong>Net</strong>works <a href="https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533" class="external-link">(DRDNet)</a>
+from steady-state gene expression data (as opposed to long-run temporal
+expression data that is very hard to collect in practice). It
+incorporates risk prediction model of having certain disease, a varying
+coefficient model, multiple ordinary differential equations, and group
+lasso estimation to learn a series of networks. This page summarizes the
+three main procedures to implement network learning.</p>
 <div class="section level1">
 <h1 id="installation-and-other-packages">Installation and other packages<a class="anchor" aria-label="anchor" href="#installation-and-other-packages"></a>
 </h1>
@@ -138,31 +140,39 @@ listed below</p>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://Matrix.R-forge.R-project.org/" class="external-link">Matrix</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org" class="external-link">igraph</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></code></pre></div>
-<p>The overall goal for this tutorial is to provide detailed codes with
-one data application to learn and visualize <strong>the hypertension
-risk-associated pseudo-dynamic gene-gene networks in the tissue of blood
+<p>The overall goal for this tutorial is to provide detailed codes to
+learn and visualize <strong>the hypertension risk-associated
+pseudo-dynamic gene-gene networks in the tissue of blood
 vessel</strong>, which will be illustrated in details in the following
-three tutorials. The user is highly recommended to go through it one by
-one.</p>
+three tutorials. The illustrating data is from <a href="https://gtexportal.org/home/datasets" class="external-link">GTEx</a> consisting of gene
+expression from blood vessel and de-identified phenotypical information
+from donors. The user is highly recommended to go through the following
+tutorials one by one.</p>
 </div>
 <div class="section level1">
 <h1 id="predict-the-agent">Predict the agent<a class="anchor" aria-label="anchor" href="#predict-the-agent"></a>
 </h1>
-<p>This section includes the content of preparing data, building the
+<p>The first step is to use the phenotypical data (<a href="https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_used.csv" class="external-link">pheno_used</a>)
+to impute the risk of having hypertension (named as agent in general).
+This section includes the content of preparing the data, building the
 prediction model for the agent, and evaluating the model for the
-predicted agent. This agent is related to certain disease risk of
-interest (risk of having hypertension) and can be used to construct
-pseudo-dynamic networks. Please find the details in <a href="https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial1.html">Tutorial
+predicted agent. The imputed agent will be then used to construct
+disease risk-associated pseudo-dynamic networks. Note that the raw
+phenotype data is confidential and protected. The illustrating data used
+in the tutorial is subset of the raw data and also de-identifiable.
+Please find the details in <a href="https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial1.html">Tutorial
 1</a></p>
 </div>
 <div class="section level1">
 <h1 id="train-the-network-model">Train the network model<a class="anchor" aria-label="anchor" href="#train-the-network-model"></a>
 </h1>
-<p>This section is the main section in DRDNetPro, which includes the
-content of preparing gene expression data, training the varying
-coefficient model for gene expressions, generating the base matrices for
-network learning, and training the network model. Please find the
-details in <a href="https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial2.html">Tutorial
+<p>Based on the imputed agent, the next step is to learn the network for
+gene expression data (<a href="https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data_vessel.csv" class="external-link">data
+vessel</a>). This section is the main section in DRDNetPro, which
+includes the content of preparing gene expression data, training the
+varying coefficient model for gene expressions, generating the base
+matrices for network learning, and training the network model. Please
+find the details in <a href="https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial2.html">Tutorial
 2</a></p>
 </div>
 <div class="section level1">
