@@ -51,7 +51,7 @@ row_mean<-apply(data_vessel,1, mean)
 data_vessel<-data_vessel[row_mean>0,]
 dim(data_vessel)
 
-#let the gene expression equal to zero if it's less than 1 level:
+#let the gene expression equal to zero if it's no more than 1 level:
 data_vessel[data_vessel<=1]<-0
 dim(data_vessel)
 which(data_vessel<=1 & data_vessel>0)
@@ -130,7 +130,7 @@ smk_cov<-index_data$smoke[order(index)]
 ```
 
 # Train the varying coefficient model
-Before constructing the network, each selected gene should be fitted by varying coefficient model. Run the following code to delete samples that are too close to each other in terms of agent values.
+Before constructing the network, each selected gene should be fitted by varying coefficient model (see technical details in [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533)). Run the following code to delete samples that are too close to each other in terms of agent values.
 ```{r,message=FALSE}
 #further refine the data by deleting the data with agent too close to each other, this step is highly recommended in practice. Here we set the threshod=0.0001
 data_observe<-data_observe[c(1,diff(agent,lag=1))>=0.0001,]
@@ -166,7 +166,7 @@ lines(y=data.vcfit$data_fitted[,id_sub],x=agent,col="blue")}
 
 
 # Generate base matrix for the network model
-The base matrix is the key component for the network learning in a non-parametric manner. Run the function `base.construct` to construct the base matrix for the varying intercept and base matrix for the varying coefficient of smoking
+The base matrix is the key component for the network learning in a non-parametric manner. Run the function `base.construct` to construct the base matrix for the varying intercept and base matrix for the varying coefficient of smoking (see technical details in [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533))
 ```{r,message=FALSE,eval=FALSE}
 data_fitted<-data.vcfit$data_fitted
 data_fitted_cov<-data.vcfit$data_fitted_cov
@@ -186,7 +186,7 @@ base.output<-readRDSFromWeb("https://github.com/chencxxy28/DRDNetPro/raw/main/vi
 ```
 
 # Train the network model
-With base matrices, it is ready to learn the network by the function `network.learn`
+With base matrices, it is ready to learn the network by the function `network.learn` (see technical details in [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533))
 ```{r,message=FALSE,eval=FALSE}
 X_big<-base.output$X_big
 X_big_cov<-base.output$X_big_cov
