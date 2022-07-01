@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ![DRDNetPro working flow](https://github.com/chencxxy28/DRDNetPro/raw/main/docs/reference/figures/Bio_protocal_paper_06252022.png)
 
 
-**DRDNetPro** is a bio-protocol for recovering disease risk-associated pseudo-dynamic networks [(DRDNet)](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533) from steady-state data. It incorporates risk prediction model of having certain disease, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks. This page summarizes the three main procedures to implement network learning.
+**DRDNetPro** is a bio-protocol for recovering **D**isease **R**isk-associated pseudo-**D**ynamic **Net**works [(DRDNet)](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533) from steady-state gene expression data (as opposed to long-run temporal expression data that is very hard to collect in practice). It incorporates risk prediction model of having certain disease, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks. This page summarizes the three main procedures to implement network learning.
 
 
 # Installation and other packages
@@ -43,13 +43,13 @@ library(igraph)
 library(ggplot2)
 ```
 
-The overall goal for this tutorial is to provide detailed codes with one data application to learn and visualize **the hypertension risk-associated pseudo-dynamic gene-gene networks in the tissue of blood vessel**, which will be illustrated in details in the following three tutorials. The user is highly recommended to go through it one by one.
+The overall goal for this tutorial is to provide detailed codes to learn and visualize **the hypertension risk-associated pseudo-dynamic gene-gene networks in the tissue of blood vessel**, which will be illustrated in details in the following three tutorials. The illustrating data is from [GTEx](https://gtexportal.org/home/datasets) consisting of gene expression from blood vessel and de-identified phenotypical information from donors. The user is highly recommended to go through the following tutorials one by one.
 
 # Predict the agent
-This section includes the content of preparing data, building the prediction model for the agent, and evaluating the model for the predicted agent. This agent is related to certain disease risk of interest (risk of having hypertension) and can be used to construct pseudo-dynamic networks. Please find the details in [Tutorial 1](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial1.html)
+The first step is to use the phenotypical data ([pheno_used](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_used.csv)) to impute the risk of having hypertension (named as agent in general). Note that the raw phenotype data is confidential and protected. The illustrating data used in the tutorial is subset of the raw data and also de-identifiable. This section includes the content of preparing the data, building the prediction model for the agent, and evaluating the model for the predicted agent. The imputed agent will be then used to construct disease risk-associated pseudo-dynamic networks. Please find the details in [Tutorial 1](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial1.html)
 
 # Train the network model  
-This section is the main section in DRDNetPro, which includes the content of preparing gene expression data, training the varying coefficient model for gene expressions, generating the base matrices for network learning, and training the network model. Please find the details in [Tutorial 2](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial2.html)
+Based on the imputed agent, the next step is to learn the network for gene expression data ([data vessel](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data_vessel.csv)). This section is the main section in DRDNetPro, which includes the content of preparing gene expression data, training the varying coefficient model for gene expressions, generating the base matrices for network learning, and training the network model. Please find the details in [Tutorial 2](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial2.html)
 
 # Visualize the results 
 This section includes the content of extracting the results from the trained network model, visualizing the pseudo-dynamic network for a given agent value, and visualizing the interaction behaviors from genes to a targetd gene over the spectrum of the agent (risk of having hypertension). Please find the details in [Tutorial 3](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial3.html)
