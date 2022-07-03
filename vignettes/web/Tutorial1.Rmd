@@ -43,6 +43,12 @@ The agent in the following tutorial is related to the risk of having hypertensio
 ```{r,message=FALSE}
 #read the data
 pheno_raw<-read.csv("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_used.csv")
+# pheno_raw$SUBJID<-rep(1:nrow(pheno_raw))
+# colnames(pheno_raw)<-c("ID","V1","V2","V3","V4","V5","V6",
+#                        "V7","V8","V9","disease","V10",
+#                        "V11","V12")
+# write.csv(pheno_raw,"pheno_did.csv",row.names = FALSE)
+
 #rearrange the data
 pheno_used<-data.frame(MHHTN=pheno_raw$MHHTN,pheno_raw[,!(colnames(pheno_raw) %in% c("MHHTN","SUBJID"))])
 head(pheno_used)
