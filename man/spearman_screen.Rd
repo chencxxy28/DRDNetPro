@@ -7,7 +7,7 @@
 spearman_screen(index_data,data_vessel,size)
 }
 \arguments{
-\item{index_data}{The data including imputed agent.}
+\item{agent}{The imputed disease risk.}
 
 \item{data_vessel}{The gene expression matrix.}
 
