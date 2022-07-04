@@ -111,7 +111,7 @@ index_utilized<-unique(c(screening_index_smoking,screening_index_nsmoking,sig_al
 
 saveRDS(index_utilized, file = "index_utilized.rds")
 
-length(sig_all_index)
+length(index_utilized)
 ```
 
 The selected genes can be also directly accessed by running the code
