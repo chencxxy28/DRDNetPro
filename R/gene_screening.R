@@ -1,22 +1,23 @@
 #'@title Gene screening based on the Spearman correlation.
 #'@description This function can be used to screen the genes based on Spearman correlation coefficient.
 #'@usage spearman_screen(index_data,data_vessel,size)
-#'@param index_data The data including imputed agent.
+#'@param agent The imputed disease risk.
 #'@param data_vessel The gene expression matrix.
 #'@param size The number of selected genes.
 #'
 #'@return The vector containing the index for the selected genes.
 #'@export
 
-spearman_screen<-function(index_data,data_vessel,size)
+spearman_screen<-function(agent,data_vessel,size)
 {
-  index<-as.numeric(as.matrix(index_data$rate,ncol=1))
+  #index<-as.numeric(as.matrix(index_data$rate,ncol=1))
+  index<-agent
 
   #order the data by the index:
   exp_index<-index[order(index)]
   X<-log(exp_index)
   data_vessel_order<-data_vessel[,order(index)]
-  index_data<-index_data[order(index),]
+  #index_data<-index_data[order(index),]
   dim(data_vessel_order)
   Y<-data_vessel_order
 
