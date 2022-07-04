@@ -145,46 +145,60 @@ and <a href="https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/dat
 <code class="sourceCode R"><span class="co">#read the data</span>
 <span class="va">pheno_together</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_together.csv"</span><span class="op">)</span> <span class="co"># phenotype data</span>
 <span class="va">data_vessel</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data_vessel.csv"</span><span class="op">)</span> <span class="co"># gene expression data</span></code></pre></div>
-<p>Select genes with positive expressions and do log transformation.</p>
+<p>This gene expression dataset contains the gene name in the first
+column and gene expression in the rest of 299 columns. The expression
+data is normalized in TPMs.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] 56202   300</span></code></pre>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">data_vessel</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></code></pre></div>
+<pre><code><span class="co">##                   X GTEX.111YS.0526.SM.5GZXJ GTEX.1122O.1126.SM.5NQ8X</span>
+<span class="co">## 1 ENSG00000223972.4                  0.00000                  0.03739</span>
+<span class="co">## 2 ENSG00000227232.4                  8.63400                  9.69400</span>
+<span class="co">## 3 ENSG00000243485.2                  0.07991                  0.00000</span>
+<span class="co">## 4 ENSG00000237613.2                  0.10070                  0.00000</span>
+<span class="co">## 5 ENSG00000268020.2                  0.06481                  0.00000</span></code></pre>
+<p>Select genes with positive expressions and do log transformation.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span><span class="op">&lt;-</span><span class="va">data_vessel</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>
 <span class="va">data_vessel</span><span class="op">&lt;-</span><span class="va">data_vessel</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] 56202   299</span></code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#delete gene with all zeros</span>
 <span class="va">row_mean</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">data_vessel</span>,<span class="fl">1</span>, <span class="va">mean</span><span class="op">)</span>
 <span class="va">data_vessel</span><span class="op">&lt;-</span><span class="va">data_vessel</span><span class="op">[</span><span class="va">row_mean</span><span class="op">&gt;</span><span class="fl">0</span>,<span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] 51925   299</span></code></pre>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#let the gene expression equal to zero if it's no more than 1 level:</span>
 <span class="va">data_vessel</span><span class="op">[</span><span class="va">data_vessel</span><span class="op">&lt;=</span><span class="fl">1</span><span class="op">]</span><span class="op">&lt;-</span><span class="fl">0</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] 51925   299</span></code></pre>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">&lt;=</span><span class="fl">1</span> <span class="op">&amp;</span> <span class="va">data_vessel</span><span class="op">&gt;</span><span class="fl">0</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## integer(0)</span></code></pre>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#count zeros in each row:</span>
 <span class="va">zero_row</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">data_vessel</span>,<span class="fl">1</span>,<span class="kw">function</span> <span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">x</span><span class="op">==</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">zero_row</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
 <span class="co">##     0.0    10.0   297.0   203.3   299.0   299.0</span></code></pre>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#do log transformation</span>
 <span class="va">data_vessel</span><span class="op">[</span><span class="va">data_vessel</span><span class="op">!=</span><span class="fl">0</span><span class="op">]</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">[</span><span class="va">data_vessel</span><span class="op">!=</span><span class="fl">0</span><span class="op">]</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] 51925   299</span></code></pre>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#set threshold about zeros:</span>
 <span class="va">data_vessel</span><span class="op">&lt;-</span><span class="va">data_vessel</span><span class="op">[</span><span class="va">zero_row</span><span class="op">&lt;=</span><span class="fl">0</span>,<span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] 11466   299</span></code></pre>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">data_vessel</span>,<span class="st">"data_vessel_processed.csv"</span>,row.names <span class="op">=</span><span class="cn">F</span><span class="op">)</span></code></pre></div>
 <p>The reprocessed data can be directly loaded by</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_vessel</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data_vessel_processed.csv"</span><span class="op">)</span> <span class="co"># read preprocessed gene expression data</span></code></pre></div>
 </div>
 <div class="section level2">
@@ -192,7 +206,7 @@ and <a href="https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/dat
 </h2>
 <p>After gene expression preprocessing, the user should conduct gene
 selection. First, create the data for screening</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vessel_subject_id</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substring</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span>,<span class="fl">6</span>,<span class="fl">10</span><span class="op">)</span>
 <span class="va">vessel_subject_id</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substring</a></span><span class="op">(</span><span class="va">vessel_subject_id</span>,<span class="fl">5</span>,<span class="fl">5</span><span class="op">)</span><span class="op">==</span><span class="st">"."</span>,<span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substring</a></span><span class="op">(</span><span class="va">vessel_subject_id</span>,<span class="fl">1</span>,<span class="fl">4</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substring</a></span><span class="op">(</span><span class="va">vessel_subject_id</span>,<span class="fl">1</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span>
 
@@ -206,7 +220,7 @@ Spearson correlation. The screening process should be done separately in
 group. Run the function <code>test_screen</code> to conduct the
 hypothesis testing. Then combine the genes selected by both screening
 and testing.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#screening for smoking group</span>
 <span class="va">data_vessel_smoker</span><span class="op">&lt;-</span><span class="va">data_vessel</span><span class="op">[</span>,<span class="va">index_data</span><span class="op">$</span><span class="va">smoke</span><span class="op">==</span><span class="fl">1</span><span class="op">]</span>
 <span class="va">index_data_smoker</span><span class="op">&lt;-</span><span class="va">index_data</span><span class="op">[</span><span class="va">index_data</span><span class="op">$</span><span class="va">smoke</span><span class="op">==</span><span class="fl">1</span>,<span class="op">]</span>
@@ -218,7 +232,7 @@ and testing.</p>
 <span class="va">data_vessel_nsmoker</span><span class="op">&lt;-</span><span class="va">data_vessel</span><span class="op">[</span>,<span class="va">index_data</span><span class="op">$</span><span class="va">smoke</span><span class="op">==</span><span class="fl">0</span><span class="op">]</span>
 <span class="va">index_data_nsmoker</span><span class="op">&lt;-</span><span class="va">index_data</span><span class="op">[</span><span class="va">index_data</span><span class="op">$</span><span class="va">smoke</span><span class="op">==</span><span class="fl">0</span>,<span class="op">]</span>
 
-<span class="va">screening_index_nsmoking</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/spearman_screen.html">spearman_screen</a></span><span class="op">(</span>index_data<span class="op">=</span><span class="va">index_data_nsmoker</span>,data_vessel<span class="op">=</span><span class="va">data_vessel_nsmoker</span>,size<span class="op">=</span><span class="fl">40</span><span class="op">)</span>
+<span class="va">screening_index_nsmoking</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/spearman_screen.html">spearman_screen</a></span><span class="op">(</span>agent<span class="op">=</span><span class="va">index_data_nsmoker</span><span class="op">$</span><span class="va">rate</span>,data_vessel<span class="op">=</span><span class="va">data_vessel_nsmoker</span>,size<span class="op">=</span><span class="fl">40</span><span class="op">)</span>
 <span class="va">screening_index_nsmoking</span>
 
 
@@ -231,12 +245,12 @@ and testing.</p>
 <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">index_utilized</span><span class="op">)</span></code></pre></div>
 <p>The selected genes can be also directly accessed by running the
 code</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">index_utilized</span><span class="op">&lt;-</span><span class="fu">readRDSFromWeb</span><span class="op">(</span> <span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/index_utilized.rds"</span><span class="op">)</span></code></pre></div>
 <p>There are 85 genes selected. Finally, construct the data for the
 following network learning. These data are ordered in terms of imputed
 agent</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">index</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">index_data</span><span class="op">$</span><span class="va">rate</span>,ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="va">data_vessel_order</span><span class="op">&lt;-</span><span class="va">data_vessel</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">index</span><span class="op">)</span><span class="op">]</span> <span class="co">#order the gene matrix based on the order of the agent</span>
 <span class="va">x_original</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">data_vessel_order</span><span class="op">)</span>
@@ -252,22 +266,22 @@ agent</p>
 by varying coefficient model (see technical details in <a href="https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533" class="external-link">DRDNet</a>).
 Run the following code to delete samples that are too close to each
 other in terms of agent values.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#further refine the data by deleting the data with agent too close to each other, this step is highly recommended in practice. Here we set the threshod=0.0001</span>
 <span class="va">data_observe</span><span class="op">&lt;-</span><span class="va">data_observe</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">agent</span>,lag<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">&gt;=</span><span class="fl">0.0001</span>,<span class="op">]</span>
 <span class="va">x_cov</span><span class="op">&lt;-</span><span class="va">smk_cov</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">agent</span>,lag<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">&gt;=</span><span class="fl">0.0001</span><span class="op">]</span>
 <span class="va">agent</span><span class="op">&lt;-</span><span class="va">agent</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">agent</span>,lag<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">&gt;=</span><span class="fl">0.0001</span><span class="op">]</span></code></pre></div>
 <p>Run the function <code>vc.fit</code> to fit the varying coefficient
 model with smoking as the covariate.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">4351</span><span class="op">)</span>
 <span class="va">data.vcfit</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/vc.fit.html">vc.fit</a></span><span class="op">(</span>agent<span class="op">=</span><span class="va">agent</span>,data_observe<span class="op">=</span><span class="va">data_observe</span>,x_cov<span class="op">=</span><span class="va">x_cov</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">data.vcfit</span>, file <span class="op">=</span> <span class="st">"data.vcfit.rds"</span><span class="op">)</span></code></pre></div>
 <p>The users can also directly load the fitted model</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data.vcfit</span><span class="op">&lt;-</span><span class="fu">readRDSFromWeb</span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data.vcfit.rds"</span><span class="op">)</span></code></pre></div>
 <p>Run the following codes to visualize the fitting curves</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">id_sub</span><span class="op">&lt;-</span><span class="fl">8</span>
 <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#for smoking group</span>
@@ -277,7 +291,7 @@ model with smoking as the covariate.</p>
 <span class="co">#for non-smoking group</span>
 <span class="fu"><a href="https://rdrr.io/pkg/pROC/man/plot.roc.html" class="external-link">plot</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">agent</span><span class="op">[</span><span class="va">x_cov</span><span class="op">==</span><span class="fl">0</span><span class="op">]</span>,y<span class="op">=</span><span class="va">data_observe</span><span class="op">[</span><span class="va">x_cov</span><span class="op">==</span><span class="fl">0</span>,<span class="va">id_sub</span><span class="op">]</span>,col<span class="op">=</span><span class="st">"blue"</span>,ylab<span class="op">=</span><span class="st">"Expression"</span>,xlab<span class="op">=</span><span class="st">"Agent"</span>,main<span class="op">=</span><span class="st">"Non-smoking"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">data.vcfit</span><span class="op">$</span><span class="va">data_fitted</span><span class="op">[</span>,<span class="va">id_sub</span><span class="op">]</span>,x<span class="op">=</span><span class="va">agent</span>,col<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span><span class="op">}</span></code></pre></div>
-<p><img src="Tutorial2_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="Tutorial2_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 </div>
 <div class="section level1">
 <h1 id="generate-base-matrix-for-the-network-model">Generate base matrix for the network model<a class="anchor" aria-label="anchor" href="#generate-base-matrix-for-the-network-model"></a>
@@ -286,7 +300,7 @@ model with smoking as the covariate.</p>
 non-parametric manner. Run the function <code>base.construct</code> to
 construct the base matrix for the varying intercept and base matrix for
 the varying coefficient of smoking (see technical details in <a href="https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533" class="external-link">DRDNet</a>)</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_fitted</span><span class="op">&lt;-</span><span class="va">data.vcfit</span><span class="op">$</span><span class="va">data_fitted</span>
 <span class="va">data_fitted_cov</span><span class="op">&lt;-</span><span class="va">data.vcfit</span><span class="op">$</span><span class="va">data_fitted_cov</span>
 
@@ -298,7 +312,7 @@ x_cov<span class="op">=</span><span class="va">x_cov</span><span class="op">)</s
 
 <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">base.output</span>, file <span class="op">=</span> <span class="st">"base.output.rds"</span><span class="op">)</span></code></pre></div>
 <p>The constructed base matrices can be also loaded by</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">base.output</span><span class="op">&lt;-</span><span class="fu">readRDSFromWeb</span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/base.output.rds"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level1">
@@ -306,7 +320,7 @@ x_cov<span class="op">=</span><span class="va">x_cov</span><span class="op">)</s
 </h1>
 <p>With base matrices, it is ready to learn the network by the function
 <code>network.learn</code> (see technical details in <a href="https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533" class="external-link">DRDNet</a>)</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">X_big</span><span class="op">&lt;-</span><span class="va">base.output</span><span class="op">$</span><span class="va">X_big</span>
 <span class="va">X_big_cov</span><span class="op">&lt;-</span><span class="va">base.output</span><span class="op">$</span><span class="va">X_big_cov</span>
 <span class="va">X_big_int</span><span class="op">&lt;-</span><span class="va">base.output</span><span class="op">$</span><span class="va">X_big_int</span>
@@ -330,7 +344,7 @@ x_cov<span class="op">=</span><span class="va">x_cov</span><span class="op">)</s
 <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">network.output</span>, file <span class="op">=</span> <span class="st">"network.output.rds"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">data.list.t3</span>, file <span class="op">=</span> <span class="st">"data.list.t3.rds"</span><span class="op">)</span></code></pre></div>
 <p>The results from network learning can be also loaded by</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">network.output</span><span class="op">&lt;-</span><span class="fu">readRDSFromWeb</span><span class="op">(</span><span class="st">"https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/network.output.rds"</span><span class="op">)</span></code></pre></div>
 <p>This is the end of the Tutorial 2, please visit <a href="https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial3.html">Tutorial
 3</a> for the next step of visualizing the results.</p>
