@@ -46,7 +46,7 @@ dim(data_vessel)
 data_vessel[1:5,1:3]
 ```
 
-Select genes with positive expressions and do log transformation. 
+Select genes with positive expression and do log transformation. 
 ```{r,message=FALSE}
 rownames(data_vessel)<-data_vessel[,1]
 data_vessel<-data_vessel[,-1]
