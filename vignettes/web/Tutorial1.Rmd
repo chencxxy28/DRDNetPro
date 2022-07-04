@@ -47,15 +47,6 @@ pheno_raw<-read.csv("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/
 smoke<-pheno_raw$smoke
 pheno_raw<-pheno_raw[,-which(colnames(pheno_raw)=="smoke")]
 
-
-# pheno_raw<-read.csv("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_used.csv")
-# 
-# 
-# colnames(pheno_raw)<-c("ID","V1","V2","V3","V4","V5","V6",
-#                        "V7","V8","V9","disease","smoke",
-#                        "V11","V12")
-# write.csv(pheno_raw,"pheno_did.csv",row.names = FALSE)
-
 #rearrange the data
 pheno_used<-data.frame(disease=pheno_raw$disease,pheno_raw[,!(colnames(pheno_raw) %in% c("disease","ID"))])
 head(pheno_used)
