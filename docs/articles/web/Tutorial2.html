@@ -200,7 +200,7 @@ selection. First, create the data for screening</p>
 <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">vessel_together</span><span class="op">)</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>,<span class="st">"haha"</span><span class="op">)</span>
 <span class="va">index_data</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">vessel_together</span>,y<span class="op">=</span><span class="va">pheno_together</span>,by.x<span class="op">=</span><span class="st">"id"</span>,all.x<span class="op">=</span><span class="cn">T</span>,sort<span class="op">=</span><span class="cn">F</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">index_data</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 299   8</span></code></pre>
+<pre><code><span class="co">## [1] 299   5</span></code></pre>
 <p>Run the function <code>spearman_screen</code> to screen the genes by
 Spearson correlation. The screening process should be done separately in
 group. Run the function <code>test_screen</code> to conduct the
@@ -228,7 +228,7 @@ and testing.</p>
 
 <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">index_utilized</span>, file <span class="op">=</span> <span class="st">"index_utilized.rds"</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">sig_all_index</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">index_utilized</span><span class="op">)</span></code></pre></div>
 <p>The selected genes can be also directly accessed by running the
 code</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
