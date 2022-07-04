@@ -16,3 +16,4 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Imports: Matrix, grpreg, np, pROC, splines2, ranger, xgboost
+Depends: R (>= 3.5.0)
