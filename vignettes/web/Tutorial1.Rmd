@@ -42,15 +42,19 @@ The agent in the following tutorial is related to the risk of having hypertensio
 
 ```{r,message=FALSE}
 #read the data
-pheno_raw<-read.csv("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_used.csv")
+pheno_raw<-read.csv("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_did.csv")
+
+# pheno_raw<-read.csv("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_used.csv")
+
 # pheno_raw$SUBJID<-rep(1:nrow(pheno_raw))
+# pheno_raw<-pheno_raw[,-which(colnames(pheno_raw)=="MHSMKSTS")]
 # colnames(pheno_raw)<-c("ID","V1","V2","V3","V4","V5","V6",
 #                        "V7","V8","V9","disease","V10",
-#                        "V11","V12")
+#                        "V11")
 # write.csv(pheno_raw,"pheno_did.csv",row.names = FALSE)
 
 #rearrange the data
-pheno_used<-data.frame(MHHTN=pheno_raw$MHHTN,pheno_raw[,!(colnames(pheno_raw) %in% c("MHHTN","SUBJID"))])
+pheno_used<-data.frame(disease=pheno_raw$disease,pheno_raw[,!(colnames(pheno_raw) %in% c("disease","ID"))])
 head(pheno_used)
 ```
 
@@ -59,7 +63,7 @@ There is no unique way to predict the agent (risk of having hypertension). Stati
 
 ## logistic regression
 ```{r,message=FALSE}
-fit<-glm(MHHTN~AGE+HGHT+BMI+MHASTHMA+MHCOPD+MHHRTATT+MHHRTDIS+MHT1D+MHT2D+MHDRNKSTS+SEX,data=pheno_used,family = binomial(link = "logit"))
+fit<-glm(disease~.,data=pheno_used,family = binomial(link = "logit"))
 rate<-fitted(fit)
 summary(rate)
 ```
@@ -150,10 +154,10 @@ sample.ind<-sample(1:nrow(pheno_used),round(0.9*nrow(pheno_used))) #id used for 
 pheno_used_training<-pheno_used[sample.ind,]
 pheno_used_testing<-pheno_used[!(1:nrow(pheno_used) %in% sample.ind),]
 
-fit_train<-glm(MHHTN~AGE+HGHT+BMI+MHASTHMA+MHCOPD+MHHRTATT+MHHRTDIS+MHT1D+MHT2D+MHDRNKSTS+SEX,data=pheno_used_training,family = binomial(link = "logit"))
+fit_train<-glm(disease~.,data=pheno_used_training,family = binomial(link = "logit"))
 
 test_prob = predict(fit_train, newdata = pheno_used_testing, type = "response")
-test_roc_specific =roc(pheno_used_testing$MHHTN ~ test_prob, plot = TRUE, print.auc = TRUE)
+test_roc_specific =roc(pheno_used_testing$disease ~ test_prob, plot = TRUE, print.auc = TRUE)
 ```
 
 The AUC value is around 0.83, which is desired. Similar procedure could be applied to the case with random forest or XGBoost. After the agent imputation, we can move forward to the stage of network learning, which is illustrated in [Tutorial 2](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial%202.html). Before the end of this tutorial, let us create a phenotypical data consisting of the imputed agent for the use in next tutorial.
