@@ -4,7 +4,7 @@
 \alias{spearman_screen}
 \title{Gene screening based on the Spearman correlation.}
 \usage{
-spearman_screen(index_data,data_vessel,size)
+spearman_screen(agent,data_vessel,size)
 }
 \arguments{
 \item{agent}{The imputed disease risk.}
