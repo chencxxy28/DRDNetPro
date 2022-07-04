@@ -159,7 +159,7 @@ data is normalized in TPMs.</p>
 <span class="co">## 3 ENSG00000243485.2                  0.07991                  0.00000</span>
 <span class="co">## 4 ENSG00000237613.2                  0.10070                  0.00000</span>
 <span class="co">## 5 ENSG00000268020.2                  0.06481                  0.00000</span></code></pre>
-<p>Select genes with positive expressions and do log transformation.</p>
+<p>Select genes with positive expression and do log transformation.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">data_vessel</span><span class="op">)</span><span class="op">&lt;-</span><span class="va">data_vessel</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>
 <span class="va">data_vessel</span><span class="op">&lt;-</span><span class="va">data_vessel</span><span class="op">[</span>,<span class="op">-</span><span class="fl">1</span><span class="op">]</span>
