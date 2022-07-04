@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = '/Users/chixiang.chen/OneDrive - University of Maryland School of Medicine/phd_in_psu/research/Prof._Wu/Network/tissue/blood_vessel/')
 ```
 
-**DRDNetPro** is a bio-protocol for recovering disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model of having certain disease, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks. This tutorial will provide detailed information for the first step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). The data we will use in this tutorial is named [pheno_used](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_used.csv).
+**DRDNetPro** is a bio-protocol for recovering disease risk-associated pseudo-dynamic networks (DRDNet) from steady-state data. It incorporates risk prediction model of having certain disease, a varying coefficient model, multiple ordinary differential equations, and group lasso estimation to learn a series of networks. This tutorial will provide detailed information for the first step of implementing the [DRDNet](https://academic.oup.com/bioinformatics/article-abstract/38/9/2481/6537533). The data we will use in this tutorial is named [pheno_did](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_did.csv).
 
 To begin with, we need to install the following packages in R
 
