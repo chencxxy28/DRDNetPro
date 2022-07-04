@@ -1,6 +1,6 @@
 #'@title Gene screening based on the Spearman correlation.
 #'@description This function can be used to screen the genes based on Spearman correlation coefficient.
-#'@usage spearman_screen(index_data,data_vessel,size)
+#'@usage spearman_screen(agent,data_vessel,size)
 #'@param agent The imputed disease risk.
 #'@param data_vessel The gene expression matrix.
 #'@param size The number of selected genes.
