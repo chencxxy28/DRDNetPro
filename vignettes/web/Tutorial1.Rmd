@@ -166,9 +166,9 @@ test_roc_specific =roc(pheno_used_testing$disease ~ test_prob, plot = TRUE, prin
 The AUC value is around 0.83, which is desired. Similar procedure could be applied to the case with random forest or XGBoost. After the agent imputation, we can move forward to the stage of network learning, which is illustrated in [Tutorial 2](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial%202.html). Before the end of this tutorial, let us create a phenotypical data consisting of the imputed agent for the use in next tutorial.
 
 ```{r,message=FALSE}
-pheno_subject_id<-substring(pheno_raw$SUBJID,6,10)
-pheno_together<-data.frame(cbind(id=pheno_raw$ID,rate,smoke))
-colnames(pheno_together)<-c("id","rate","smoke")
+pheno_subject_id<-substring(pheno_raw$ID,6,10)
+pheno_together<-data.frame(cbind(id=pheno_subject_id,rate,smoke,pheno_raw$disease))
+colnames(pheno_together)<-c("id","rate","smoke","hyper")
 head(pheno_together)
 write.csv(pheno_together,"pheno_together.csv",row.names =F)
 ```
