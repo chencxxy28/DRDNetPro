@@ -44,13 +44,17 @@ The agent in the following tutorial is related to the risk of having hypertensio
 #read the data
 pheno_raw<-read.csv("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_did.csv")
 
+smoke<-pheno_raw$smoke
+pheno_raw<-pheno_raw[,-which(colnames(pheno_raw)=="smoke")]
+
+
 # pheno_raw<-read.csv("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_used.csv")
 
+
 # pheno_raw$SUBJID<-rep(1:nrow(pheno_raw))
-# pheno_raw<-pheno_raw[,-which(colnames(pheno_raw)=="MHSMKSTS")]
 # colnames(pheno_raw)<-c("ID","V1","V2","V3","V4","V5","V6",
-#                        "V7","V8","V9","disease","V10",
-#                        "V11")
+#                        "V7","V8","V9","disease","smoke",
+#                        "V11","V12")
 # write.csv(pheno_raw,"pheno_did.csv",row.names = FALSE)
 
 #rearrange the data
@@ -74,13 +78,13 @@ Random forest is an ensemble of decision trees. It builds and combines multiple 
 Create the data for `ranger`, the outcome should be a factor.
 ```{r,message=FALSE}
 mydata<-pheno_used
-mydata$MHHTN<-as.factor(mydata$MHHTN)
+mydata$disease<-as.factor(mydata$disease)
 ```
 
 Run the following code to train the model. Note that some parameters, such as the number of variables, can be further tuned. Please refer [random forest](http://www.css.cornell.edu/faculty/dgr2/_static/files/R_html/CompareRandomForestPackages.html#2_Random_forest_with_randomForest) for more information.
 ```{r,message=FALSE}
 set.seed(12345)
-rf<-ranger(MHHTN~., num.trees=1000,data=mydata,replace=T,write.forest = T,probability = T)
+rf<-ranger(disease~., num.trees=1000,data=mydata,replace=T,write.forest = T,probability = T)
 rate.rf<-predict(rf, mydata)$predictions[,2]
 summary(rate.rf)
 ```
@@ -96,7 +100,7 @@ XGBoost requires a specific type of input data, which can be run by the followin
 mydata<-pheno_used
 
 # variable names
-features <- setdiff(names(mydata), "MHHTN")
+features <- setdiff(names(mydata), "disease")
 # Create the treatment plan from the training data
 treatplan <- vtreat::designTreatmentsZ(mydata, features, verbose = FALSE)
 # Get the "clean" variable names from the scoreFrame
@@ -106,7 +110,7 @@ new_vars <- treatplan %>%
   magrittr::use_series(varName) 
 # Prepare the training data
 features_train <- vtreat::prepare(treatplan, mydata, varRestriction = new_vars) %>% as.matrix()
-response_train <- mydata$MHHTN
+response_train <- mydata$disease
 ```
 
 Tune the number of trees that minimizes the error
@@ -163,9 +167,9 @@ test_roc_specific =roc(pheno_used_testing$disease ~ test_prob, plot = TRUE, prin
 The AUC value is around 0.83, which is desired. Similar procedure could be applied to the case with random forest or XGBoost. After the agent imputation, we can move forward to the stage of network learning, which is illustrated in [Tutorial 2](https://chencxxy28.github.io/DRDNetPro/articles/web/Tutorial%202.html). Before the end of this tutorial, let us create a phenotypical data consisting of the imputed agent for the use in next tutorial.
 
 ```{r,message=FALSE}
-pheno_subject_id<-substring(pheno_raw$SUBJID,6,10)
-pheno_together<-data.frame(cbind(pheno_subject_id,rate,pheno_used$MHSMKSTS,pheno_used$SEX,pheno_used$HGHT,pheno_used$BMI,pheno_used$MHHTN))
-colnames(pheno_together)<-c("id","rate","smoke","sex","height","bmi","hyper")
+#pheno_subject_id<-substring(pheno_raw$SUBJID,6,10)
+pheno_together<-data.frame(cbind(id=pheno_raw$ID,rate,smoke))
+colnames(pheno_together)<-c("id","rate","smoke")
 head(pheno_together)
 write.csv(pheno_together,"pheno_together.csv",row.names =F)
 ```
