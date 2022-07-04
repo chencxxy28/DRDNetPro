@@ -13,3 +13,4 @@ output: html_document
 * [network.output](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/network.output.rds)
 * [pheno_together](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_together.csv)
 * [pheno_used](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_used.csv)
+* [pheno_did](https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/pheno_did.csv)
