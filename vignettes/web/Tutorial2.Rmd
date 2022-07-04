@@ -40,6 +40,12 @@ pheno_together<-read.csv("https://github.com/chencxxy28/DRDNetPro/raw/main/vigne
 data_vessel<-read.csv("https://github.com/chencxxy28/DRDNetPro/raw/main/vignettes/data/data_vessel.csv") # gene expression data
 ```
 
+This gene expression dataset contains the gene name in the first column and gene expression in the rest of 299 columns. The expression data is normalized in TPMs.
+```{r,message=FALSE}
+dim(data_vessel)
+data_vessel[1:5,1:3]
+```
+
 Select genes with positive expressions and do log transformation. 
 ```{r,message=FALSE}
 rownames(data_vessel)<-data_vessel[,1]
@@ -101,7 +107,7 @@ screening_index_smoking
 data_vessel_nsmoker<-data_vessel[,index_data$smoke==0]
 index_data_nsmoker<-index_data[index_data$smoke==0,]
 
-screening_index_nsmoking<-spearman_screen(index_data=index_data_nsmoker,data_vessel=data_vessel_nsmoker,size=40)
+screening_index_nsmoking<-spearman_screen(agent=index_data_nsmoker$rate,data_vessel=data_vessel_nsmoker,size=40)
 screening_index_nsmoking
 
 
